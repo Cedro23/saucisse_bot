@@ -1,6 +1,9 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
+using Newtonsoft.Json;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Saucisse_bot
@@ -12,9 +15,19 @@ namespace Saucisse_bot
 
         public async Task RunAsync()
         {
+            var json = string.Empty;
+            using (var fs = File.OpenRead("config.json"))
+            using (var sr = new StreamReader(fs, new UTF8Encoding(false)))
+                json = await sr.ReadToEndAsync().ConfigureAwait(false);
+
+            var configJson = JsonConvert.DeserializeObject<ConfigJson>(json);
+
             var config = new DiscordConfiguration
             {
-
+                Token = configJson.Token,
+                TokenType = TokenType.Bot,
+                AutoReconnect = true,
+                Intents = DiscordIntents.AllUnprivileged
             };
 
             Client = new DiscordClient(config);
@@ -23,18 +36,20 @@ namespace Saucisse_bot
 
             var commandsConfig = new CommandsNextConfiguration
             {
-
+                StringPrefixes = new string[] { configJson.Prefix },
+                EnableDms = false,
+                EnableMentionPrefix = true
             };
 
             Commands = Client.UseCommandsNext(commandsConfig);
 
             await Client.ConnectAsync();
-            await Task.Delay(1);
+            await Task.Delay(-1);
         }
 
         private Task OnClientReady(DiscordClient client, ReadyEventArgs e)
         {
-            return null;
+            return Task.CompletedTask;
         }
     }
 }
