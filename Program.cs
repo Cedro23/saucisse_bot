@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Saucisse_bot
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var bot = new Bot();
+        }
+    }
+}
