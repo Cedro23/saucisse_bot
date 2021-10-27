@@ -20,7 +20,7 @@ namespace Saucisse_bot.Commands
         public async Task GetLatency(CommandContext ctx)
         {
             await ctx.Channel
-                .SendMessageAsync($"Current ping is {ctx.Client.Ping.ToString()}ms")
+                .SendMessageAsync($"Current ping is {ctx.Client.Ping}ms")
                 .ConfigureAwait(false);
         }
 
@@ -32,7 +32,7 @@ namespace Saucisse_bot.Commands
             [Description("Number of messages to delete")] int n)
         {
             var messages = await ctx.Channel.GetMessagesAsync(n + 1);
-            await ctx.Channel.DeleteMessagesAsync(messages);
+            await ctx.Channel.DeleteMessagesAsync(messages).ConfigureAwait(false);
         }
 
 
@@ -43,7 +43,7 @@ namespace Saucisse_bot.Commands
 
             var message = await interactivity.WaitForMessageAsync(x => x.Channel == ctx.Channel).ConfigureAwait(false);
 
-            await ctx.Channel.SendMessageAsync(message.Result.Content);
+            await ctx.Channel.SendMessageAsync(message.Result.Content).ConfigureAwait(false);
         }
 
         [Command("respondreaction")]
@@ -53,7 +53,7 @@ namespace Saucisse_bot.Commands
 
             var message = await interactivity.WaitForReactionAsync(x => x.Channel == ctx.Channel).ConfigureAwait(false);
 
-            await ctx.Channel.SendMessageAsync(message.Result.Emoji);
+            await ctx.Channel.SendMessageAsync(message.Result.Emoji).ConfigureAwait(false);
         }
     }
 }
