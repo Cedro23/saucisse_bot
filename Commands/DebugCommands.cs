@@ -1,5 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 using System.Threading.Tasks;
 
@@ -28,7 +29,7 @@ namespace Saucisse_bot.Commands
         [Description("Deletes X messages")]
         [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageMessages)]
-        public async Task Clear(CommandContext ctx, 
+        public async Task Clear(CommandContext ctx,
             [Description("Number of messages to delete")] int n)
         {
             var messages = await ctx.Channel.GetMessagesAsync(n + 1);
@@ -36,24 +37,14 @@ namespace Saucisse_bot.Commands
         }
 
 
-        [Command("respondmsg")]
-        public async Task Respondmsg(CommandContext ctx)
-        {
-            var interactivity = ctx.Client.GetInteractivity();
+        //[Command("respondmsg")]
+        //public async Task Respondmsg(CommandContext ctx)
+        //{
+        //    var interactivity = ctx.Client.GetInteractivity();
 
-            var message = await interactivity.WaitForMessageAsync(x => x.Channel == ctx.Channel).ConfigureAwait(false);
+        //    var message = await interactivity.WaitForMessageAsync(x => x.Channel == ctx.Channel).ConfigureAwait(false);
 
-            await ctx.Channel.SendMessageAsync(message.Result.Content).ConfigureAwait(false);
-        }
-
-        [Command("respondreaction")]
-        public async Task Respondreaction(CommandContext ctx)
-        {
-            var interactivity = ctx.Client.GetInteractivity();
-
-            var message = await interactivity.WaitForReactionAsync(x => x.Channel == ctx.Channel).ConfigureAwait(false);
-
-            await ctx.Channel.SendMessageAsync(message.Result.Emoji).ConfigureAwait(false);
-        }
+        //    await ctx.Channel.SendMessageAsync(message.Result.Content).ConfigureAwait(false);
+        //}
     }
 }

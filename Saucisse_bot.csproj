@@ -15,4 +15,8 @@
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="bin\Debug\net5.0\Dictionnaries\" />
+  </ItemGroup>
+
 </Project>

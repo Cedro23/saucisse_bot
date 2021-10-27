@@ -55,6 +55,7 @@ namespace Saucisse_bot
 
             Commands = Client.UseCommandsNext(commandsConfig);
             Commands.RegisterCommands<DebugCommands>();
+            Commands.RegisterCommands<RandomCommands>();
 
             await Client.ConnectAsync();
             await Task.Delay(-1);
