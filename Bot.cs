@@ -1,7 +1,11 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
+using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Extensions;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Saucisse_bot.Commands;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +15,7 @@ namespace Saucisse_bot
     class Bot
     {
         public DiscordClient Client { get; private set; }
+        public InteractivityExtension Interactivity { get; private set; }
         public CommandsNextExtension Commands { get; private set; }
 
         public async Task RunAsync()
@@ -27,12 +32,19 @@ namespace Saucisse_bot
                 Token = configJson.Token,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
-                Intents = DiscordIntents.AllUnprivileged
+                Intents = DiscordIntents.AllUnprivileged,
+                MinimumLogLevel = LogLevel.Debug
             };
 
             Client = new DiscordClient(config);
 
             Client.Ready += OnClientReady;
+
+            Client.UseInteractivity(new InteractivityConfiguration()
+            {
+
+            });
+
 
             var commandsConfig = new CommandsNextConfiguration
             {
@@ -42,6 +54,7 @@ namespace Saucisse_bot
             };
 
             Commands = Client.UseCommandsNext(commandsConfig);
+            Commands.RegisterCommands<DebugCommands>();
 
             await Client.ConnectAsync();
             await Task.Delay(-1);
