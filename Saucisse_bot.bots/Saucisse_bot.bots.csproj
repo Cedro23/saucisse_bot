@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Saucisse_bot.Core\Saucisse_bot.Core.csproj" />
     <ProjectReference Include="..\Saucisse_bot.DAL.Migrations\Saucisse_bot.DAL.Migrations.csproj" />
     <ProjectReference Include="..\Saucisse_bot.DAL\Saucisse_bot.DAL.csproj" />
   </ItemGroup>

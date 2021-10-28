@@ -1,5 +1,6 @@
-﻿using Saucisse_bot.DAL.Models.Items;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Saucisse_bot.DAL.Models.Items;
+using Saucisse_bot.DAL.Models.Profiles;
 
 namespace Saucisse_bot.DAL
 {
@@ -7,6 +8,8 @@ namespace Saucisse_bot.DAL
     {
         public RPGContext(DbContextOptions<RPGContext> options) : base(options) { }
 
+        public DbSet<Profile> Profiles { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<ProfileItem> ProfileItems { get; set; }
     }
 }

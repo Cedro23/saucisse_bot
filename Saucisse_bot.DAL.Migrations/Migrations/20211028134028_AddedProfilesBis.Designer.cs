@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Saucisse_bot.DAL;
 
 namespace Saucisse_bot.DAL.Migrations.Migrations
 {
     [DbContext(typeof(RPGContext))]
-    partial class RPGContextModelSnapshot : ModelSnapshot
+    [Migration("20211028134028_AddedProfilesBis")]
+    partial class AddedProfilesBis
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,34 +33,9 @@ namespace Saucisse_bot.DAL.Migrations.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Items");
-                });
-
-            modelBuilder.Entity("Saucisse_bot.DAL.Models.Items.ProfileItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ItemId");
-
-                    b.HasIndex("ProfileId");
-
-                    b.ToTable("ProfileItems");
                 });
 
             modelBuilder.Entity("Saucisse_bot.DAL.Models.Profiles.Profile", b =>
@@ -71,9 +48,6 @@ namespace Saucisse_bot.DAL.Migrations.Migrations
                     b.Property<decimal>("DiscordId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<int>("Gold")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("GuildId")
                         .HasColumnType("decimal(20,0)");
 
@@ -83,30 +57,6 @@ namespace Saucisse_bot.DAL.Migrations.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Profiles");
-                });
-
-            modelBuilder.Entity("Saucisse_bot.DAL.Models.Items.ProfileItem", b =>
-                {
-                    b.HasOne("Saucisse_bot.DAL.Models.Items.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Saucisse_bot.DAL.Models.Profiles.Profile", "Profile")
-                        .WithMany("Items")
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Item");
-
-                    b.Navigation("Profile");
-                });
-
-            modelBuilder.Entity("Saucisse_bot.DAL.Models.Profiles.Profile", b =>
-                {
-                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

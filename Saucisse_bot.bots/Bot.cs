@@ -60,7 +60,8 @@ namespace Saucisse_bot.Bots
 
             Commands.RegisterCommands<DebugCommands>();
             Commands.RegisterCommands<RandomCommands>();
-            Commands.RegisterCommands<RPGCommands>();
+            Commands.RegisterCommands<ItemCommands>();
+            Commands.RegisterCommands<ProfileCommands>();
 
             Client.ConnectAsync();
         }

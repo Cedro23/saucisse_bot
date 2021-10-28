@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Saucisse_bot.DAL\Saucisse_bot.DAL.csproj" />
+  </ItemGroup>
+
 </Project>

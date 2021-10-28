@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Saucisse_bot.Core.Services.Items;
+using Saucisse_bot.Core.Services.Profiles;
 using Saucisse_bot.DAL;
 
 namespace Saucisse_bot.Bots
@@ -14,7 +16,13 @@ namespace Saucisse_bot.Bots
             {
                 options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=RPGContext;Trusted_Connection=True;MultipleActiveResultSets=true",
                     x => x.MigrationsAssembly("Saucisse_bot.DAL.Migrations"));
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
+
+            services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IExperienceService, ExperienceService>();
+
             var serviceProvider = services.BuildServiceProvider();
 
             var bot = new Bot(serviceProvider);
