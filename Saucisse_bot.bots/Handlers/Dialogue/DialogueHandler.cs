@@ -1,11 +1,11 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
-using Saucisse_bot.bots.Handlers.Dialogue.Steps;
+using Saucisse_bot.Bots.Handlers.Dialogue.Steps;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 
-namespace Saucisse_bot.bots.Handlers.Dialogue
+namespace Saucisse_bot.Bots.Handlers.Dialogue
 {
     public class DialogueHandler
     {

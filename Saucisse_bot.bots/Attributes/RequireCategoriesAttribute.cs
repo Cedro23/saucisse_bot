@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Saucisse_bot.bots.Attributes
+namespace Saucisse_bot.Bots.Attributes
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class RequireCategoriesAttribute : CheckBaseAttribute

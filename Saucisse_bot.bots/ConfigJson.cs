@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Saucisse_bot.bots
+namespace Saucisse_bot.Bots
 {
     public struct ConfigJson
     {

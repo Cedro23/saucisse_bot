@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Saucisse_bot.bots.Commands
+namespace Saucisse_bot.Bots.Commands
 {
     [Group("rnd")]
     class RandomCommands : BaseCommandModule

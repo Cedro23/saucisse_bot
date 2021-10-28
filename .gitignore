@@ -388,3 +388,4 @@ bld/
 */*.sln.iml
 
 # Ignores persos
+*/config.json

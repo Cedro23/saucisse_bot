@@ -1,15 +1,13 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Saucisse_bot.bots
+namespace Saucisse_bot.Bots
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
-            //var bot = new Bot();
-            //bot.RunAsync().GetAwaiter().GetResult();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -5,13 +5,14 @@ using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Saucisse_bot.bots.Commands;
+using Saucisse_bot.Bots.Commands;
+using Saucisse_bot.Bots;
 using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Saucisse_bot.bots
+namespace Saucisse_bot.Bots
 {
     class Bot
     {
@@ -22,6 +23,7 @@ namespace Saucisse_bot.bots
         public Bot(IServiceProvider services)
         {
             var json = string.Empty;
+
             using (var fs = File.OpenRead("config.json"))
             using (var sr = new StreamReader(fs, new UTF8Encoding(false)))
                 json = sr.ReadToEnd();
@@ -33,7 +35,6 @@ namespace Saucisse_bot.bots
                 Token = configJson.Token,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
-                Intents = DiscordIntents.AllUnprivileged,
                 MinimumLogLevel = LogLevel.Debug
             };
 
@@ -41,23 +42,25 @@ namespace Saucisse_bot.bots
 
             Client.Ready += OnClientReady;
 
-            Client.UseInteractivity(new InteractivityConfiguration()
+            Client.UseInteractivity(new InteractivityConfiguration
             {
-
+                Timeout = TimeSpan.FromMinutes(2)
             });
-
 
             var commandsConfig = new CommandsNextConfiguration
             {
                 StringPrefixes = new string[] { configJson.Prefix },
                 EnableDms = false,
                 EnableMentionPrefix = true,
+                DmHelp = true,
                 Services = services
             };
 
             Commands = Client.UseCommandsNext(commandsConfig);
+
             Commands.RegisterCommands<DebugCommands>();
             Commands.RegisterCommands<RandomCommands>();
+            Commands.RegisterCommands<RPGCommands>();
 
             Client.ConnectAsync();
         }

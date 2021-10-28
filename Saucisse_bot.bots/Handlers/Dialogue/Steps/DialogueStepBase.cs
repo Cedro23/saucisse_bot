@@ -3,7 +3,7 @@ using DSharpPlus.Entities;
 using System;
 using System.Threading.Tasks;
 
-namespace Saucisse_bot.bots.Handlers.Dialogue.Steps
+namespace Saucisse_bot.Bots.Handlers.Dialogue.Steps
 {
     public abstract class DialogueStepBase : IDialogueStep
     {

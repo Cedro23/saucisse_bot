@@ -1,4 +1,4 @@
-﻿namespace Saucisse_bot.bots.Attributes
+﻿namespace Saucisse_bot.Bots.Attributes
 {
     public enum ChannelCheckMode
     {

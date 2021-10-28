@@ -5,13 +5,17 @@ VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Saucisse_bot.bots", "Saucisse_bot.bots", "{C36D932A-69BC-4CDB-B83D-BC0455AAF8E1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saucisse_bot.bots", "Saucisse_bot.bots\Saucisse_bot.bots.csproj", "{D7471AA1-58BC-4417-8FA3-6EB517CBE651}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saucisse_bot.Bots", "Saucisse_bot.bots\Saucisse_bot.Bots.csproj", "{D7471AA1-58BC-4417-8FA3-6EB517CBE651}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Saucisse_bot.DAL", "Saucisse_bot.DAL", "{6D6F7264-95D2-427B-9712-5914847D2557}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saucisse_bot.DAL", "Saucisse_bot.DAL\Saucisse_bot.DAL.csproj", "{D272AEE6-0969-47EF-8238-5A081D3F2B4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saucisse_bot.DAL.Migrations", "Saucisse_bot.DAL.Migrations\Saucisse_bot.DAL.Migrations.csproj", "{BBBB2725-FF6B-40BC-983D-30E40833A07E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saucisse_bot.DAL.Migrations", "Saucisse_bot.DAL.Migrations\Saucisse_bot.DAL.Migrations.csproj", "{BBBB2725-FF6B-40BC-983D-30E40833A07E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Saucisse_bot.Core", "Saucisse_bot.Core", "{2320974F-CAB3-4A6C-A523-8672CD5BBCDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saucisse_bot.Core", "Saucisse_bot.Core\Saucisse_bot.Core.csproj", "{D47C44C0-8515-4CA3-ABBD-5365D7A8FE60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +35,10 @@ Global
 		{BBBB2725-FF6B-40BC-983D-30E40833A07E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBBB2725-FF6B-40BC-983D-30E40833A07E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBBB2725-FF6B-40BC-983D-30E40833A07E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D47C44C0-8515-4CA3-ABBD-5365D7A8FE60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D47C44C0-8515-4CA3-ABBD-5365D7A8FE60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D47C44C0-8515-4CA3-ABBD-5365D7A8FE60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D47C44C0-8515-4CA3-ABBD-5365D7A8FE60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +47,7 @@ Global
 		{D7471AA1-58BC-4417-8FA3-6EB517CBE651} = {C36D932A-69BC-4CDB-B83D-BC0455AAF8E1}
 		{D272AEE6-0969-47EF-8238-5A081D3F2B4D} = {6D6F7264-95D2-427B-9712-5914847D2557}
 		{BBBB2725-FF6B-40BC-983D-30E40833A07E} = {6D6F7264-95D2-427B-9712-5914847D2557}
+		{D47C44C0-8515-4CA3-ABBD-5365D7A8FE60} = {2320974F-CAB3-4A6C-A523-8672CD5BBCDE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {72F00BB0-25AF-47BA-AB48-F454E1F0BAD5}

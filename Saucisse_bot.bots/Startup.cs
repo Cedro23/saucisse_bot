@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Saucisse_bot.DAL;
 
-namespace Saucisse_bot.bots
+namespace Saucisse_bot.Bots
 {
     public class Startup
     {
@@ -13,7 +13,7 @@ namespace Saucisse_bot.bots
             services.AddDbContext<RPGContext>(options => 
             {
                 options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=RPGContext;Trusted_Connection=True;MultipleActiveResultSets=true",
-                    x => x.MigrationsAssembly("DiscordBotTutorial.DAL.Migrations")
+                    x => x.MigrationsAssembly("Saucisse_bot.DAL.Migrations"));
             });
             var serviceProvider = services.BuildServiceProvider();
 

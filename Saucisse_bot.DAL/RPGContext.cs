@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Saucisse_bot.DAL.Models.Items;
+﻿using Saucisse_bot.DAL.Models.Items;
+using Microsoft.EntityFrameworkCore;
 
 namespace Saucisse_bot.DAL
 {
