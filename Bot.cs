@@ -61,7 +61,7 @@ namespace Saucisse_bot
             await Task.Delay(-1);
         }
 
-        private Task OnClientReady(DiscordClient client, ReadyEventArgs e)
+        private Task OnClientReady(DiscordClient _client, ReadyEventArgs _e)
         {
             return Task.CompletedTask;
         }
