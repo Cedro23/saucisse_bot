@@ -6,7 +6,6 @@ using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Saucisse_bot.Bots.Commands;
-using Saucisse_bot.Bots;
 using System;
 using System.IO;
 using System.Text;
@@ -50,9 +49,9 @@ namespace Saucisse_bot.Bots
             var commandsConfig = new CommandsNextConfiguration
             {
                 StringPrefixes = new string[] { configJson.Prefix },
-                EnableDms = false,
                 EnableMentionPrefix = true,
                 DmHelp = true,
+                EnableDms = true,
                 Services = services
             };
 
@@ -62,6 +61,7 @@ namespace Saucisse_bot.Bots
             Commands.RegisterCommands<RandomCommands>();
             Commands.RegisterCommands<ItemCommands>();
             Commands.RegisterCommands<ProfileCommands>();
+            Commands.RegisterCommands<DatabaseCommands>();
 
             Client.ConnectAsync();
         }

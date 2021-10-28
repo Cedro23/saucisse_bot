@@ -23,7 +23,7 @@ namespace Saucisse_bot.Bots.Commands
 
         [Command("getlatency")]
         [Description("Returns client latency")]
-        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner")]
+        [RequireOwner]
         public async Task GetLatency(CommandContext ctx)
         {
             await ctx.Channel
@@ -33,7 +33,7 @@ namespace Saucisse_bot.Bots.Commands
 
         [Command("clear")]
         [Description("Deletes X messages")]
-        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner")]
+        [RequireOwner]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageMessages)]
         public async Task Clear(CommandContext ctx,
             [Description("Number of messages to delete")] int n)
@@ -44,7 +44,7 @@ namespace Saucisse_bot.Bots.Commands
 
         [Command("poll")]
         [Description("Creates a poll")]
-        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner")]
+        [RequireOwner]
         public async Task Poll(CommandContext ctx, TimeSpan duration, params DiscordEmoji[] emojisOptions)
         {
             var interactivity = ctx.Client.GetInteractivity();
@@ -86,7 +86,7 @@ namespace Saucisse_bot.Bots.Commands
         //}
 
         [Command("dialogue")]
-        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner")]
+        [RequireOwner]
         public async Task Dialogue(CommandContext ctx)
         {
             var inputStep = new StringStep("Enter something interesting!", null);
@@ -127,7 +127,7 @@ namespace Saucisse_bot.Bots.Commands
         }
 
         [Command("emojidialogue")]
-        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner")]
+        [RequireOwner]
         public async Task EmojiDialogue(CommandContext ctx)
         {
             var yesStep = new StringStep("You chose yes", null);

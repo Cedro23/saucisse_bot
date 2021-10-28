@@ -35,7 +35,8 @@ namespace Saucisse_bot.Core.Services.Profiles
             profile = new Profile
             {
                 DiscordId = discordId,
-                GuildId = guildId
+                GuildId = guildId,
+                Gold = 100
             };
 
             context.Add(profile);

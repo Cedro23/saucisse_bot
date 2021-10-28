@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace Saucisse_bot.Bots.Commands
 {
     [Group("rnd")]
-    class RandomCommands : BaseCommandModule
+    [RequireOwner]
+    public class RandomCommands : BaseCommandModule
     {
         [Command("poticha")]
         [Description("Returns a random name for Basile's cat")]
-        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner")]
         public async Task GenerateRandomCatNameFromList(CommandContext ctx)
         {           
             var namesFile = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "Dictionnaries/CatList.txt"));
@@ -26,7 +26,6 @@ namespace Saucisse_bot.Bots.Commands
 
         [Command("pau")]
         [Description("Returns a random name for Pauline and renames her")]
-        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner")]
         public async Task GenerateRandomPauNameFromList(CommandContext ctx)
         {
             var namesFile = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "Dictionnaries/PauList.txt"));

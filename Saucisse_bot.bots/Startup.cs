@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Saucisse_bot.Core.Services.Database;
 using Saucisse_bot.Core.Services.Items;
 using Saucisse_bot.Core.Services.Profiles;
 using Saucisse_bot.DAL;
@@ -22,6 +23,7 @@ namespace Saucisse_bot.Bots
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IExperienceService, ExperienceService>();
+            services.AddScoped<IDatabaseService, DatabaseService>();
 
             var serviceProvider = services.BuildServiceProvider();
 
