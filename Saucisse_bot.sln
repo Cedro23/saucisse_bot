@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saucisse_bot.bots", "Saucis
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Saucisse_bot.DAL", "Saucisse_bot.DAL", "{6D6F7264-95D2-427B-9712-5914847D2557}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saucisse_bot.DAL", "Saucisse_bot.DAL\Saucisse_bot.DAL.csproj", "{D272AEE6-0969-47EF-8238-5A081D3F2B4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saucisse_bot.DAL", "Saucisse_bot.DAL\Saucisse_bot.DAL.csproj", "{D272AEE6-0969-47EF-8238-5A081D3F2B4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saucisse_bot.DAL.Migrations", "Saucisse_bot.DAL.Migrations\Saucisse_bot.DAL.Migrations.csproj", "{BBBB2725-FF6B-40BC-983D-30E40833A07E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,10 @@ Global
 		{D272AEE6-0969-47EF-8238-5A081D3F2B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D272AEE6-0969-47EF-8238-5A081D3F2B4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D272AEE6-0969-47EF-8238-5A081D3F2B4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBBB2725-FF6B-40BC-983D-30E40833A07E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBBB2725-FF6B-40BC-983D-30E40833A07E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBBB2725-FF6B-40BC-983D-30E40833A07E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBBB2725-FF6B-40BC-983D-30E40833A07E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D7471AA1-58BC-4417-8FA3-6EB517CBE651} = {C36D932A-69BC-4CDB-B83D-BC0455AAF8E1}
 		{D272AEE6-0969-47EF-8238-5A081D3F2B4D} = {6D6F7264-95D2-427B-9712-5914847D2557}
+		{BBBB2725-FF6B-40BC-983D-30E40833A07E} = {6D6F7264-95D2-427B-9712-5914847D2557}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {72F00BB0-25AF-47BA-AB48-F454E1F0BAD5}

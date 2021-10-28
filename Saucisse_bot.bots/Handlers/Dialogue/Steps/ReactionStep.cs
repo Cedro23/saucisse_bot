@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Saucisse_bot.Handlers.Dialogue.Steps
+namespace Saucisse_bot.bots.Handlers.Dialogue.Steps
 {
     public class ReactionStep : DialogueStepBase
     {

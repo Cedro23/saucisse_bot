@@ -4,10 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Saucisse_bot.Attributes
+namespace Saucisse_bot.bots.Attributes
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class RequireCategoriesAttribute : CheckBaseAttribute

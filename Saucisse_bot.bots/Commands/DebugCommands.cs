@@ -2,15 +2,15 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
-using Saucisse_bot.Attributes;
-using Saucisse_bot.Handlers.Dialogue;
-using Saucisse_bot.Handlers.Dialogue.Steps;
+using Saucisse_bot.bots.Attributes;
+using Saucisse_bot.bots.Handlers.Dialogue;
+using Saucisse_bot.bots.Handlers.Dialogue.Steps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Saucisse_bot.Commands
+namespace Saucisse_bot.bots.Commands
 {
     public class DebugCommands : BaseCommandModule
     {

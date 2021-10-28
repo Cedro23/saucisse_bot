@@ -5,12 +5,13 @@ using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Saucisse_bot.Commands;
+using Saucisse_bot.bots.Commands;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Saucisse_bot
+namespace Saucisse_bot.bots
 {
     class Bot
     {
@@ -18,12 +19,12 @@ namespace Saucisse_bot
         public InteractivityExtension Interactivity { get; private set; }
         public CommandsNextExtension Commands { get; private set; }
 
-        public async Task RunAsync()
+        public Bot(IServiceProvider services)
         {
             var json = string.Empty;
             using (var fs = File.OpenRead("config.json"))
             using (var sr = new StreamReader(fs, new UTF8Encoding(false)))
-                json = await sr.ReadToEndAsync().ConfigureAwait(false);
+                json = sr.ReadToEnd();
 
             var configJson = JsonConvert.DeserializeObject<ConfigJson>(json);
 
@@ -50,15 +51,15 @@ namespace Saucisse_bot
             {
                 StringPrefixes = new string[] { configJson.Prefix },
                 EnableDms = false,
-                EnableMentionPrefix = true
+                EnableMentionPrefix = true,
+                Services = services
             };
 
             Commands = Client.UseCommandsNext(commandsConfig);
             Commands.RegisterCommands<DebugCommands>();
             Commands.RegisterCommands<RandomCommands>();
 
-            await Client.ConnectAsync();
-            await Task.Delay(-1);
+            Client.ConnectAsync();
         }
 
         private Task OnClientReady(DiscordClient client, ReadyEventArgs _e)
