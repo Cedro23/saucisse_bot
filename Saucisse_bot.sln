@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saucisse_bot", "Saucisse_bot.csproj", "{72F8CE5C-7F23-4273-B2B0-362C5BF3464B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Saucisse_bot.bots", "Saucisse_bot.bots", "{C36D932A-69BC-4CDB-B83D-BC0455AAF8E1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saucisse_bot.bots", "Saucisse_bot.bots\Saucisse_bot.bots.csproj", "{D7471AA1-58BC-4417-8FA3-6EB517CBE651}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,13 +13,16 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{72F8CE5C-7F23-4273-B2B0-362C5BF3464B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72F8CE5C-7F23-4273-B2B0-362C5BF3464B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72F8CE5C-7F23-4273-B2B0-362C5BF3464B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72F8CE5C-7F23-4273-B2B0-362C5BF3464B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7471AA1-58BC-4417-8FA3-6EB517CBE651}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7471AA1-58BC-4417-8FA3-6EB517CBE651}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7471AA1-58BC-4417-8FA3-6EB517CBE651}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7471AA1-58BC-4417-8FA3-6EB517CBE651}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D7471AA1-58BC-4417-8FA3-6EB517CBE651} = {C36D932A-69BC-4CDB-B83D-BC0455AAF8E1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {72F00BB0-25AF-47BA-AB48-F454E1F0BAD5}
