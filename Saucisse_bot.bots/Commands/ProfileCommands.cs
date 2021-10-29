@@ -17,18 +17,21 @@ namespace Saucisse_bot.Bots.Commands
             _profileService = profileService;
         }
 
+        #region Display profile
         [Command("profile")]
+        //[Description("Returns the server based profile of the user who used the command")]
         public async Task Profile(CommandContext ctx)
         {
             await GetProfileToDisplayAsync(ctx, ctx.Member.Id);
         }
 
         [Command("profile")]
+        //[Description("Returns the server based profile of the mentionned user")]
         public async Task Profile(CommandContext ctx, DiscordMember member)
         {
             await GetProfileToDisplayAsync(ctx, member.Id);
         }
-      
+
         private async Task GetProfileToDisplayAsync(CommandContext ctx, ulong memberId)
         {
             Profile profile = await _profileService.GetOrCreateProfileAsync(memberId, ctx.Guild.Id).ConfigureAwait(false);
@@ -54,5 +57,20 @@ namespace Saucisse_bot.Bots.Commands
 
             await ctx.Channel.SendMessageAsync(embed: profileEmbed).ConfigureAwait(false);
         }
+        #endregion
+
+
+        #region Manage profil (owner only)
+        [Command("addgolds")]
+        [RequireOwner]
+        public async Task AddGolds(CommandContext ctx, DiscordMember member, int amount)
+        {
+            var result = await _profileService.AddGolds(member.Id, amount, ctx.Guild.Id).ConfigureAwait(false);
+            
+            if (!result) await ctx.Channel.SendMessageAsync($"There was a problem adding golds to {member.DisplayName}!").ConfigureAwait(false);
+
+            await ctx.Channel.SendMessageAsync($"Succesfully added {amount} golds to {member.DisplayName}!").ConfigureAwait(false);
+        }
+        #endregion
     }
 }

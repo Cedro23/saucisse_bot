@@ -9,6 +9,7 @@ namespace Saucisse_bot.Core.Services.Profiles
     public interface IProfileService
     {
         Task<Profile> GetOrCreateProfileAsync(ulong discordId, ulong guildId);
+        Task<bool> AddGolds(ulong discordId, int amount, ulong guildId);
     }
 
     public class ProfileService : IProfileService
@@ -44,5 +45,29 @@ namespace Saucisse_bot.Core.Services.Profiles
             await context.SaveChangesAsync().ConfigureAwait(false);
             return profile;
         }
+
+
+        #region Manage profile
+
+        public async Task<bool> AddGolds(ulong discordId, int amount, ulong guildId)
+        {
+            using var context = new RPGContext(_options);
+
+            var profile = await context.Profiles
+                .Where(x => x.GuildId == guildId)
+                .FirstOrDefaultAsync(x => x.DiscordId == discordId).ConfigureAwait(false);
+
+            if (profile != null) 
+            {
+                profile.Gold += amount;
+            }
+
+            context.Update(profile);
+
+            await context.SaveChangesAsync().ConfigureAwait(false);
+            return true;
+        }
+
+        #endregion
     }
 }

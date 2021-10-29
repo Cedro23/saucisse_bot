@@ -15,7 +15,7 @@ namespace Saucisse_bot.Bots.Commands
         [Description("Returns a random name for Basile's cat")]
         public async Task GenerateRandomCatNameFromList(CommandContext ctx)
         {           
-            var namesFile = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "Dictionnaries/CatList.txt"));
+            var namesFile = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "Sources/Dictionnaries/CatList.txt"));
             List<string> namesList = new List<string>(namesFile);
             Random rnd = new Random();
 
@@ -28,7 +28,7 @@ namespace Saucisse_bot.Bots.Commands
         [Description("Returns a random name for Pauline and renames her")]
         public async Task GenerateRandomPauNameFromList(CommandContext ctx)
         {
-            var namesFile = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "Dictionnaries/PauList.txt"));
+            var namesFile = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "Sources/Dictionnaries/PauList.txt"));
             List<string> namesList = new List<string>(namesFile);
             Random rnd = new Random();
 
