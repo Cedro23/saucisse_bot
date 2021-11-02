@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Saucisse_bot.Bots.Commands;
 using Saucisse_bot.Bots.Handlers.Message;
-using Saucisse_bot.Bots.JsonParser;
+using Saucisse_bot.Bots.JsonParsers;
 using System;
 using System.IO;
 using System.Text;

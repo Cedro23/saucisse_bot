@@ -1,6 +1,6 @@
 ﻿using DSharpPlus.Entities;
 using Newtonsoft.Json;
-using Saucisse_bot.Bots.JsonParser;
+using Saucisse_bot.Bots.JsonParsers;
 using System;
 using System.Collections.Generic;
 using System.IO;
