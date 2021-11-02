@@ -20,6 +20,7 @@ namespace Saucisse_bot.Bots
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
+            // Add a new scope for each new service
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IExperienceService, ExperienceService>();

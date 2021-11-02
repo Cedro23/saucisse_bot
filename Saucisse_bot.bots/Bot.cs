@@ -29,27 +29,39 @@ namespace Saucisse_bot.Bots
             _messageHandler = new MessageHandler();
             var json = string.Empty;
 
+            #region config.json
+            // Get the data from the config.json file
+            // If there's a error because of this file, it is either because the file doesn't exist, or because it's is not in the right folder
             using (var fs = File.OpenRead("Sources/JsonDocs/config.json"))
             using (var sr = new StreamReader(fs, new UTF8Encoding(false)))
                 json = sr.ReadToEnd();
 
-            _configJson = JsonConvert.DeserializeObject<ConfigJson>(json);
+            _configJson = JsonConvert.DeserializeObject<ConfigJson>(json); 
+            #endregion
 
             #region Client management
+            // Sets up the config for the bot
+            // The minimum log level is lower in DEBUG mode
             var config = new DiscordConfiguration
             {
                 Token = _configJson.Token,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
-                MinimumLogLevel = LogLevel.Debug
+#if DEBUG
+                MinimumLogLevel = LogLevel.Debug // Lower Log level due to DEBUG mode
+#else
+                MinimumLogLevel = LogLevel.Information
+#endif
             };
 
             Client = new DiscordClient(config);
 
-
+            // This is where the client is subscribed to Events
             Client.Ready += OnClientReady;
             Client.MessageCreated += OnMessageRecieved;
 
+            // Interactivity is used when waiting for an user based action
+            // The timespan can be changed
             Client.UseInteractivity(new InteractivityConfiguration
             {
                 Timeout = TimeSpan.FromMinutes(2)
@@ -57,6 +69,9 @@ namespace Saucisse_bot.Bots
             #endregion
 
             #region Command management
+            // Sets up the config for the commands
+            // DmHelp : set to true if you want the help to be sent in DMs
+            // EnableDms : set to true if you want to be able to use commands in DMs
             var commandsConfig = new CommandsNextConfiguration
             {
                 StringPrefixes = new string[] { _configJson.Prefix },
@@ -68,6 +83,9 @@ namespace Saucisse_bot.Bots
 
             Commands = Client.UseCommandsNext(commandsConfig);
 
+            // Add every commands script here 
+            // If the class is not set to public, it won't work
+            // If you didn't add the class here, you won't be able to call the commands inside of it
             Commands.RegisterCommands<DebugCommands>();
             Commands.RegisterCommands<RandomCommands>();
             Commands.RegisterCommands<ItemCommands>();
@@ -78,11 +96,23 @@ namespace Saucisse_bot.Bots
             Client.ConnectAsync();
         }
 
+        /// <summary>
+        /// This event is called when the bot is up and running. For now, it has no use.
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="e"></param>
+        /// <returns></returns>
         private Task OnClientReady(DiscordClient client, ReadyEventArgs e)
         {
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// This event is called whenever a message is recieved. The latter is then processed if it isn't a message from a bot or a command
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="e"></param>
+        /// <returns></returns>
         private async Task OnMessageRecieved(DiscordClient client, MessageCreateEventArgs e)
         {
             if (!e.Author.IsBot && e.Message.Content.Substring(0, 1) != _configJson.Prefix)
