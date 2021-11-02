@@ -1,9 +1,11 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Saucisse_bot.Bots.Handlers.Dialogue;
 using Saucisse_bot.Bots.Handlers.Dialogue.Steps;
 using Saucisse_bot.Core.Services.Database;
+using Saucisse_bot.DAL;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -50,16 +52,22 @@ namespace Saucisse_bot.Bots.Commands
         public async Task TableInfo(CommandContext ctx)
         {
             int value = 0;
-            List<string> tables = await _databaseService.GetTablesName().ConfigureAwait(false);
-            string infos = string.Empty; // Should return a dictionnary if possible <string, string> (field, description)
-            string content = $"Please enter the number associated with the table! {tables[0]}";
+            //List<IEntityType> tables = await _databaseService.GetTablesName().ConfigureAwait(false);
+            Dictionary<string, string> embedFields = new Dictionary<string, string>();
+            string content = $"Please enter the number associated with the table!\n";
+
+            int n = 0;
+            //foreach (var t in tables)
+            //{
+            //    content += $"{n}-{t.ClrType}\n";
+            //    n++;
+            //}
             
-            var inputStep = new IntStep(content, null, maxValue: tables.Count - 1);
+            var inputStep = new IntStep(content, null); // maxValue: tables.Count - 1
 
             inputStep.OnValidResult += async (result) =>
             {
-                // Call for the info and display them
-                infos = await _databaseService.GetTableInfo(tables[value]);
+                embedFields = await _databaseService.GetTableInfo();
             };
 
             var inputDialogueHandler = new DialogueHandler(
@@ -74,9 +82,13 @@ namespace Saucisse_bot.Bots.Commands
 
             var embed = new DiscordEmbedBuilder()
             {
-                Title = $"Here are the infos about the table {tables[value]}",
-                Description = infos
+                Title = $"Here are the infos about the table "
             };
+
+            foreach (var field in embedFields)
+            {
+                embed.AddField(field.Key, field.Value);
+            }
 
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
         }
