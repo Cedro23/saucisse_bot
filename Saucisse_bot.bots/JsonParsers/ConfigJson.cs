@@ -2,7 +2,10 @@
 
 namespace Saucisse_bot.Bots.JsonParsers
 {
-    class ConfigJson
+    /// <summary>
+    /// JSON class made to store config variables linked to the bot
+    /// </summary>
+    public class ConfigJson
     {
         [JsonProperty("token")]
         public string Token { get; private set; }

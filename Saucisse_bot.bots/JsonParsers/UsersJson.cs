@@ -2,7 +2,10 @@
 
 namespace Saucisse_bot.Bots.JsonParsers
 {
-    class UsersJson
+    /// <summary>
+    /// JSON class made to store Discord's user IDs
+    /// </summary>
+    public class UsersJson
     {
         [JsonProperty("Pau")]
         public ulong Pau { get; private set; }

@@ -37,7 +37,7 @@ namespace Saucisse_bot.Bots.Handlers.Dialogue.Steps
                 Description = $"{user.Mention}, {_content}"
             };
 
-            embedBuilder.AddField("To stop the dialogue", "Use the ?cancel command");
+            embedBuilder.AddField("To stop the dialogue", "Use the !cancel command");
 
             if (_minLength.HasValue)
             {
@@ -61,7 +61,7 @@ namespace Saucisse_bot.Bots.Handlers.Dialogue.Steps
 
                 OnMessageAdded(messageResult.Result);
 
-                if (messageResult.Result.Content.Equals("?cancel", StringComparison.OrdinalIgnoreCase))
+                if (messageResult.Result.Content.Equals("!cancel", StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }

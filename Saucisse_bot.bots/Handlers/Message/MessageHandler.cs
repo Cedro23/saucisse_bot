@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Saucisse_bot.Bots.Handlers.Message
 {
+    /// <summary>
+    /// This class is used to handle messages which are not commands
+    /// </summary>
     public class MessageHandler
     {
         private const string PATTERN_QUOI = @"quoi *[\?][?,;. !/()'xDmdr]*";
@@ -19,6 +22,7 @@ namespace Saucisse_bot.Bots.Handlers.Message
         private Regex _rgQuoi;
         private Regex _rgQui;
 
+        // Main constructor
         public MessageHandler()
         {
             var json = string.Empty;

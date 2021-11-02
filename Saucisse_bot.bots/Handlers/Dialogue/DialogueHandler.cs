@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Saucisse_bot.Bots.Handlers.Dialogue
 {
+    /// <summary>
+    /// This class is used to handle dialogues with one or more users
+    /// </summary>
     public class DialogueHandler
     {
         private readonly DiscordClient _client;
@@ -26,7 +29,7 @@ namespace Saucisse_bot.Bots.Handlers.Dialogue
 
         public async Task<bool> ProcessDialogue()
         {
-            while(_currentStep != null)
+            while (_currentStep != null)
             {
                 _currentStep.OnMessageAdded += (message) => messages.Add(message);
 

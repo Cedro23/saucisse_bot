@@ -74,7 +74,7 @@ namespace Saucisse_bot.Bots.Commands
             await ctx.Channel.SendMessageAsync(string.Join("\n", results)).ConfigureAwait(false);
         }
 
-
+        // Shows how the interactivity module works
         //[Command("respondmsg")]
         //public async Task Respondmsg(CommandContext ctx)
         //{
@@ -99,7 +99,7 @@ namespace Saucisse_bot.Bots.Commands
             {
                 input = result;
 
-                if (result == "bite")
+                if (result == "something funny")
                 {
                     inputStep.SetNextStep(funnyStep);
                 }

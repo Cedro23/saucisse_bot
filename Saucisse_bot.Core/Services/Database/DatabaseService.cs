@@ -2,6 +2,7 @@
 using Saucisse_bot.Core.Services.Items;
 using Saucisse_bot.Core.Services.Profiles;
 using Saucisse_bot.DAL;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Saucisse_bot.Core.Services.Database
@@ -9,6 +10,8 @@ namespace Saucisse_bot.Core.Services.Database
     public interface IDatabaseService
     {
         Task<bool> PurgeTables(string tableName = "");
+        Task<List<string>> GetTablesName();
+        Task<string> GetTableInfo(string tableName);
     }
     public class DatabaseService : IDatabaseService
     {
@@ -21,6 +24,25 @@ namespace Saucisse_bot.Core.Services.Database
             _options = options;
             _profileService = profileService;
             _itemService = itemService;
+        }
+
+        public async Task<string> GetTableInfo(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<List<string>> GetTablesName()
+        {
+            List<string> tableNames = new List<string>();
+            using var context = new RPGContext(_options);
+            var tables = context.Model.GetEntityTypes();
+
+            foreach (var table in tables)
+            {
+                tableNames.Add(table.ShortName());
+            }
+
+            return tableNames;
         }
 
         public async Task<bool> PurgeTables(string tableName = "")
