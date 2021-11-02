@@ -37,7 +37,7 @@ namespace Saucisse_bot.Core.Services.Database
             Dictionary<string, string> embedFieldsDic = new Dictionary<string, string>();
 
 
-            var table = context.Model.FindEntityType("Items");
+            var table = context.Model.FindEntityType("Saucisse_bot.DAL.Models.Items.Item");
 
             //embedFieldsDic.Add("Name", table.DisplayName());
             //embedFieldsDic.Add("Count", table.GetNavigations().ToString());
