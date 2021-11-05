@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Saucisse_bot.Bots.JsonParsers
 {
@@ -23,5 +24,11 @@ namespace Saucisse_bot.Bots.JsonParsers
         public ulong Ced { get; private set; }
         [JsonProperty("Matbot")]
         public ulong Matbot { get; private set; }
+        [JsonProperty("Ozhy")]
+        public ulong Ozhy { get; private set; }
+        [JsonProperty("Vincent")]
+        public ulong Vincent { get; private set; }
+        [JsonProperty("LCBot")]
+        public ulong LCBot { get; private set; }
     }
 }

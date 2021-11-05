@@ -9,7 +9,7 @@ namespace Saucisse_bot.DAL.Models.Profiles
         public ulong GuildId { get; set; }
         public int Gold { get; set; }
         public int Xp { get; set; }
-        public int Level => Xp / 100;
+        public int Level => Xp / 100; // Changer la fonction de niveau
 
         public List<ProfileItem> Items { get; set; } = new List<ProfileItem>();
     }

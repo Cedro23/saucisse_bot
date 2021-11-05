@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Saucisse_bot.DAL;
 using Saucisse_bot.DAL.Models.Profiles;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace Saucisse_bot.Core.Services.Profiles
     {
         Task<Profile> GetOrCreateProfileAsync(ulong discordId, ulong guildId);
         Task<bool> AddGolds(ulong discordId, int amount, ulong guildId);
+        Task<List<Profile>> GetProfileList(ulong discordId);
     }
 
     public class ProfileService : IProfileService
@@ -44,6 +46,12 @@ namespace Saucisse_bot.Core.Services.Profiles
 
             await context.SaveChangesAsync().ConfigureAwait(false);
             return profile;
+        }
+
+        public async Task<List<Profile>> GetProfileList(ulong guildId)
+        {
+            using var context = new RPGContext(_options);
+            return await context.Profiles.Where(x => x.GuildId == guildId).ToListAsync<Profile>().ConfigureAwait(false);
         }
 
 

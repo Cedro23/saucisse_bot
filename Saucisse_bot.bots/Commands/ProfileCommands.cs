@@ -19,6 +19,7 @@ namespace Saucisse_bot.Bots.Commands
 
         #region Display profile
         [Command("profile")]
+        [Cooldown(1, 30, CooldownBucketType.User)]
         //[Description("Returns the server based profile of the user who used the command")]
         public async Task Profile(CommandContext ctx)
         {
@@ -26,6 +27,7 @@ namespace Saucisse_bot.Bots.Commands
         }
 
         [Command("profile")]
+        [Cooldown(1, 30, CooldownBucketType.User)]
         //[Description("Returns the server based profile of the mentionned user")]
         public async Task Profile(CommandContext ctx, DiscordMember member)
         {
@@ -59,6 +61,27 @@ namespace Saucisse_bot.Bots.Commands
         }
         #endregion
 
+        [Command("profilelist")]
+        public async Task ProfileList(CommandContext ctx)
+        {
+            //var storedProfiles = 
+            var profiles = await _profileService.GetProfileList(ctx.Guild.Id).ConfigureAwait(false);
+            var embed = new DiscordEmbedBuilder()
+            {
+                Title = "List of profiles :",
+                Color = DiscordColor.Orange
+            };
+
+            foreach (var profile in profiles)
+            {
+                var member = await ctx.Guild.GetMemberAsync(profile.DiscordId).ConfigureAwait(false);
+                embed.AddField($"{member.DisplayName}", $"{profile.Gold}golds");
+            }
+
+            await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
+
+
+        }
 
         #region Manage profil (owner only)
         [Command("addgolds")]
@@ -66,7 +89,7 @@ namespace Saucisse_bot.Bots.Commands
         public async Task AddGolds(CommandContext ctx, DiscordMember member, int amount)
         {
             var result = await _profileService.AddGolds(member.Id, amount, ctx.Guild.Id).ConfigureAwait(false);
-            
+
             if (!result) await ctx.Channel.SendMessageAsync($"There was a problem adding golds to {member.DisplayName}!").ConfigureAwait(false);
 
             await ctx.Channel.SendMessageAsync($"Succesfully added {amount} golds to {member.DisplayName}!").ConfigureAwait(false);

@@ -15,7 +15,6 @@ namespace Saucisse_bot.Bots.Commands
     /// This class contains commands that have a direct impact on the database
     /// </summary>
     [RequireOwner]
-    [RequireDirectMessage]
     public class DatabaseCommands : BaseCommandModule
     {
         private readonly IDatabaseService _databaseService;
@@ -51,43 +50,17 @@ namespace Saucisse_bot.Bots.Commands
         [Command("tableinfo")]
         public async Task TableInfo(CommandContext ctx)
         {
-            int value = 0;
-            //List<IEntityType> tables = await _databaseService.GetTablesName().ConfigureAwait(false);
-            Dictionary<string, string> embedFields = new Dictionary<string, string>();
-            string content = $"Please enter the number associated with the table!\n";
+            Dictionary<string, int> tableList = await _databaseService.GetTablesCount().ConfigureAwait(false);
 
-            int n = 0;
-            //foreach (var t in tables)
-            //{
-            //    content += $"{n}-{t.ClrType}\n";
-            //    n++;
-            //}
-            
-            var inputStep = new IntStep(content, null); // maxValue: tables.Count - 1
-
-            inputStep.OnValidResult += async (result) =>
-            {
-                embedFields = await _databaseService.GetTableInfo();
-            };
-
-            var inputDialogueHandler = new DialogueHandler(
-                ctx.Client,
-                ctx.Channel,
-                ctx.User,
-                inputStep);
-
-            bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
-
-            if (!succeeded) { return; }
 
             var embed = new DiscordEmbedBuilder()
             {
-                Title = $"Here are the infos about the table "
+                Title = $"Here are the number of entities for each table:"
             };
 
-            foreach (var field in embedFields)
+            foreach (var table in tableList)
             {
-                embed.AddField(field.Key, field.Value);
+                embed.AddField(table.Key, table.Value.ToString());
             }
 
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
