@@ -20,7 +20,7 @@ namespace Saucisse_bot.Bots.Commands
         #region Display profile
         [Command("profile")]
         [Cooldown(1, 30, CooldownBucketType.User)]
-        //[Description("Returns the server based profile of the user who used the command")]
+        [Description("Returns the server based profile of the user who used the command")]
         public async Task Profile(CommandContext ctx)
         {
             await GetProfileToDisplayAsync(ctx, ctx.Member.Id);
@@ -28,7 +28,7 @@ namespace Saucisse_bot.Bots.Commands
 
         [Command("profile")]
         [Cooldown(1, 30, CooldownBucketType.User)]
-        //[Description("Returns the server based profile of the mentionned user")]
+        [Description("Returns the server based profile of the mentionned user")]
         public async Task Profile(CommandContext ctx, DiscordMember member)
         {
             await GetProfileToDisplayAsync(ctx, member.Id);
@@ -62,6 +62,7 @@ namespace Saucisse_bot.Bots.Commands
         #endregion
 
         [Command("profilelist")]
+        [Description("Returns a list of all profiles existing on this server")]
         public async Task ProfileList(CommandContext ctx)
         {
             //var storedProfiles = 
@@ -86,6 +87,7 @@ namespace Saucisse_bot.Bots.Commands
         #region Manage profil (owner only)
         [Command("addgolds")]
         [RequireOwner]
+        [Description("Grants the owner the possibility to add golds to a profile")]
         public async Task AddGolds(CommandContext ctx, DiscordMember member, int amount)
         {
             var result = await _profileService.AddGolds(member.Id, amount, ctx.Guild.Id).ConfigureAwait(false);
