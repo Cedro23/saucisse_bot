@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Saucisse_bot.Bots.Attributes
 {
+    /// <summary>
+    /// Checks whether the channel is in a certain category or not (categories are like folders)
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class RequireCategoriesAttribute : CheckBaseAttribute
     {
