@@ -12,6 +12,10 @@ using System.Threading.Tasks;
 
 namespace Saucisse_bot.Bots.Commands
 {
+    /// <summary>
+    /// Debug commands are simple commands used to see if the bot works as intended.
+    /// This class is also used to try out stuff in commands
+    /// </summary>
     public class DebugCommands : BaseCommandModule
     {
         [Command("ping")]
@@ -22,7 +26,7 @@ namespace Saucisse_bot.Bots.Commands
         }
 
         [Command("getlatency")]
-        [Description("Returns client latency")]
+        [Description("Returns the client latency")]
         [RequireOwner]
         public async Task GetLatency(CommandContext ctx)
         {
@@ -31,6 +35,7 @@ namespace Saucisse_bot.Bots.Commands
                 .ConfigureAwait(false);
         }
 
+        // Move in a new command script made for owners/admin only
         [Command("clear")]
         [Description("Deletes X messages")]
         [RequireOwner]
@@ -85,6 +90,8 @@ namespace Saucisse_bot.Bots.Commands
         //    await ctx.Channel.SendMessageAsync(message.Result.Content).ConfigureAwait(false);
         //}
 
+
+        // This is an exemple for a dialogue with the user
         [Command("dialogue")]
         [RequireOwner]
         public async Task Dialogue(CommandContext ctx)
