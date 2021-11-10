@@ -7,8 +7,10 @@ namespace Saucisse_bot.Bots.JsonParsers
     /// </summary>
     public class ConfigJson
     {
-        [JsonProperty("token")]
-        public string Token { get; private set; }
+        [JsonProperty("token_prod")]
+        public string TokenProd { get; private set; }
+        [JsonProperty("token_dev")]
+        public string TokenDev { get; private set; }
         [JsonProperty("prefix")]
         public string Prefix { get; private set; }
     }

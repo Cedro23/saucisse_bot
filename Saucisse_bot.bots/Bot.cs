@@ -43,13 +43,14 @@ namespace Saucisse_bot.Bots
             // Sets up the config for the bot
             // The minimum log level is lower in DEBUG mode
             var config = new DiscordConfiguration
-            {
-                Token = _configJson.Token,
+            {                
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
 #if DEBUG
+                Token = _configJson.TokenDev,    // Use the dev bot Token when in debug
                 MinimumLogLevel = LogLevel.Debug // Lower Log level due to DEBUG mode
 #else
+                Token = _configJson.TokenProd,   // Use the prod bot Token when running the bot
                 MinimumLogLevel = LogLevel.Information
 #endif
             };
