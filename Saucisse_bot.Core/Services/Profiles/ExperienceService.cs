@@ -22,11 +22,11 @@ namespace Saucisse_bot.Core.Services.Profiles
             _profileService = profileService;
         }
 
-        public async Task<GrantXpViewModel> GrantXpAsync(ulong discordId, ulong guildId, int xpAmount)
+        public async Task<GrantXpViewModel> GrantXpAsync(ulong memberId, ulong guildId, int xpAmount)
         {
             using var context = new RPGContext(_options);
 
-            Profile profile = await _profileService.GetOrCreateProfileAsync(discordId, guildId).ConfigureAwait(false);
+            Profile profile = await _profileService.GetOrCreateProfileAsync(memberId, guildId).ConfigureAwait(false);
 
             int levelBefore = profile.Level;
 

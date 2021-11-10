@@ -38,7 +38,7 @@ namespace Saucisse_bot.Bots.Commands
         {
             Profile profile = await _profileService.GetOrCreateProfileAsync(memberId, ctx.Guild.Id).ConfigureAwait(false);
 
-            DiscordMember member = ctx.Guild.Members[profile.DiscordId];
+            DiscordMember member = await ctx.Guild.GetMemberAsync(profile.DiscordId);
 
             DiscordEmbedBuilder.EmbedThumbnail thumbnail = new DiscordEmbedBuilder.EmbedThumbnail();
             thumbnail.Url = member.AvatarUrl;

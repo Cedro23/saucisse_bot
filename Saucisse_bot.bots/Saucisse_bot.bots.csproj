@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\Debug\netcoreapp3.1\**" />
+    <Content Remove="bin\Debug\netcoreapp3.1\**" />
+    <EmbeddedResource Remove="bin\Debug\netcoreapp3.1\**" />
+    <None Remove="bin\Debug\netcoreapp3.1\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="bin\Debug\net5.0\config.json" />
   </ItemGroup>
 

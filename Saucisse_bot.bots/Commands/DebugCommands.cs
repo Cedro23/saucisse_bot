@@ -5,6 +5,8 @@ using DSharpPlus.Interactivity.Extensions;
 using Saucisse_bot.Bots.Attributes;
 using Saucisse_bot.Bots.Handlers.Dialogue;
 using Saucisse_bot.Bots.Handlers.Dialogue.Steps;
+using Saucisse_bot.Bots.Handlers.ExperienceHandler;
+using Saucisse_bot.Core.Services.Profiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,13 @@ namespace Saucisse_bot.Bots.Commands
     /// </summary>
     public class DebugCommands : BaseCommandModule
     {
+        private ExperienceHandler _expHandler;
+
+        public DebugCommands(IExperienceService experienceService)
+        {
+            _expHandler = new ExperienceHandler(experienceService);  
+        }
+
         [Command("ping")]
         [Description("Returns pong")]
         public async Task Ping(CommandContext ctx)
@@ -158,5 +167,10 @@ namespace Saucisse_bot.Bots.Commands
             if (!succeeded) { return; }
         }
 
+        [Command("testexp")]
+        public async Task TestExp(CommandContext ctx)
+        {
+            await _expHandler.GrantExp(ctx, 10, 100);
+        }
     }
 }
