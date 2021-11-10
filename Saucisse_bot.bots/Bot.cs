@@ -94,7 +94,7 @@ namespace Saucisse_bot.Bots
             Commands.RegisterCommands<DatabaseCommands>(); 
             #endregion
 
-            Client.ConnectAsync();
+            Client.ConnectAsync().ConfigureAwait(false);
         }
 
         /// <summary>
