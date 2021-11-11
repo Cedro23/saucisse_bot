@@ -21,6 +21,12 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 ```batch
 dotnet-ef migrations add [name_of_migration] -p ../Saucisse_bot.DAL.Migrations/Saucisse_bot.DAL.Migrations.csproj --context Saucisse_bot.DAL.RPGContext
 ```
+
+> Update the database
+```batch
+dotnet-ef database update -p ../Saucisse_bot.DAL.Migrations/Saucisse_bot.DAL.Migrations.csproj --context Saucisse_bot.DAL.RPGContext
+```
+
 ## 2. Building the solution
 To build the solution simply double click the "build.bat" script.
 
