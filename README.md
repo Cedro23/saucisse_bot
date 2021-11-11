@@ -5,22 +5,36 @@ Saucisse_bot is a C# Discord bot based on the Dsharp+ library.
 ## 1. Database
 ### 1.1. Creation
 
+> Start by installing dotnet-ef tools : <br>
+```batch
+dotnet tool install --global dotnet-ef
+```
+
+> Then add the Microsoft.EntityFrameworkCore.Design package in the Saucisse_bot.Bots project :
+```batch
+cd Saucisse_bot.bots
+dotnet add package Microsoft.EntityFrameworkCore.Design
+```
+
+
 ### 1.2. Migration
 
+## 2. Building the solution
+To build the solution simply double click the "build.bat" script.
 
-## 2. Commands
-### 2.1. Database
+## 3. Commands
+### 3.1. Database
 
-### 2.2. Debug
+### 3.2. Debug
 
-### 2.3. Profile
+### 3.3. Profile
 
-### 2.4. Random
+### 3.4. Random
 
-## 3. Other features
-### 3.1. Message handler
+## 4. Other features
+### 4.1. Message handler
 
-### 3.2. Dictatorship censure
-#### 3.2.1. Words and sentences
+### 4.2. Dictatorship censure
+#### 4.2.1. Words and sentences
 
-#### 3.2.2. Images and gifs
+#### 4.2.2. Images and gifs
