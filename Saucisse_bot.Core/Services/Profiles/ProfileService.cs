@@ -10,7 +10,9 @@ namespace Saucisse_bot.Core.Services.Profiles
     public interface IProfileService
     {
         Task<Profile> GetProfileAsync(ulong memberId, ulong guildId);
-        Task<Profile> CreateProfileAsync(ulong memberId, ulong guildId);
+        Task<bool> CreateProfileAsync(ulong memberId, ulong guildId);
+        Task<bool> ResetProfileAsync(ulong memberId, ulong guildId);
+        Task<bool> DeleteProfileAsync(ulong memberId, ulong guildId);
         Task<bool> AddGoldsAsync(ulong memberId, int amount, ulong guildId);
         Task<List<Profile>> GetProfileListAsync(ulong guildId);
     }
@@ -37,7 +39,7 @@ namespace Saucisse_bot.Core.Services.Profiles
             return profile;
         }
 
-        public async Task<Profile> CreateProfileAsync(ulong memberId, ulong guildId)
+        public async Task<bool> CreateProfileAsync(ulong memberId, ulong guildId)
         {
             using var context = new RPGContext(_options);
 
@@ -51,7 +53,7 @@ namespace Saucisse_bot.Core.Services.Profiles
             context.Add(profile);
 
             await context.SaveChangesAsync().ConfigureAwait(false);
-            return profile;
+            return profile != null;
         }
 
         public async Task<List<Profile>> GetProfileListAsync(ulong guildId)
@@ -79,6 +81,16 @@ namespace Saucisse_bot.Core.Services.Profiles
 
             await context.SaveChangesAsync().ConfigureAwait(false);
             return true;
+        }
+
+        public Task<bool> ResetProfileAsync(ulong memberId, ulong guildId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<bool> DeleteProfileAsync(ulong memberId, ulong guildId)
+        {
+            throw new System.NotImplementedException();
         }
         #endregion
     }

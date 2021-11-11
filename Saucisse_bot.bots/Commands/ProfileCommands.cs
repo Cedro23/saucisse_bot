@@ -1,4 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using Saucisse_bot.Core.Services.Profiles;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 namespace Saucisse_bot.Bots.Commands
 {
     [Group("profile")]
+    [Description("These commands revolve around users profiles")]
     public class ProfileCommands : BaseCommandModule
     {
         private IProfileService _profileService;
@@ -18,7 +20,9 @@ namespace Saucisse_bot.Bots.Commands
             _profileService = profileService;
         }
 
+        #region User commands
         [Command("create")]
+        [Cooldown(1, 30, CooldownBucketType.User)]
         [Description("Creates a profile for the user who used the command")]
         public async Task CreateProfil(CommandContext ctx)
         {
@@ -29,21 +33,20 @@ namespace Saucisse_bot.Bots.Commands
             {
                 profileEmbed = new DiscordEmbedBuilder
                 {
-                    Title = $"{ctx.Member.Mention}, your profile already exists",
-                    Description = "Your profile already exists, please use \"!profile show\" to display it",
+                    Title = "Your profile already exists",
+                    Description = $"{ctx.Member.Mention}, your profile already exists, please use \"!profile show\" to display it",
                     Color = DiscordColor.Yellow
                 };
-
             }
             else
             {
-                profile = await _profileService.CreateProfileAsync(ctx.Member.Id, ctx.Guild.Id);
-                if (profile != null)
+                bool isCreated = await _profileService.CreateProfileAsync(ctx.Member.Id, ctx.Guild.Id);
+                if (isCreated)
                 {
                     profileEmbed = new DiscordEmbedBuilder
                     {
-                        Title = $"{ctx.Member.Mention}, your profile has been created",
-                        Description = "Your profile has correctly been created",
+                        Title = "Your profile has been created",
+                        Description = $"{ctx.Member.Mention}, your profile has correctly been created",
                         Color = DiscordColor.Green
                     };
                 }
@@ -51,8 +54,8 @@ namespace Saucisse_bot.Bots.Commands
                 {
                     profileEmbed = new DiscordEmbedBuilder
                     {
-                        Title = $"{ctx.Member.Mention}, there was a problem creating your profile",
-                        Description = "Your profile was not created, please try using the command again, or call for an admin",
+                        Title = "There was a problem creating your profile",
+                        Description = $"{ctx.Member.Mention}, your profile was not created, please try using the command again, or call for an admin",
                         Color = DiscordColor.Red
                     };
                 }
@@ -82,7 +85,7 @@ namespace Saucisse_bot.Bots.Commands
             Profile profile = await _profileService.GetProfileAsync(memberId, ctx.Guild.Id).ConfigureAwait(false);
             DiscordEmbedBuilder profileEmbed;
 
-            if(profile != null)
+            if (profile != null)
             {
                 DiscordMember member = await ctx.Guild.GetMemberAsync(profile.DiscordId);
 
@@ -118,6 +121,7 @@ namespace Saucisse_bot.Bots.Commands
         #endregion
 
         [Command("list")]
+        [Cooldown(1, 30, CooldownBucketType.User)]
         [Description("Returns a list of all profiles existing on this server")]
         public async Task ProfileList(CommandContext ctx)
         {
@@ -135,9 +139,12 @@ namespace Saucisse_bot.Bots.Commands
             }
 
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
-        }
+        } 
+        #endregion
 
+        #region Admin commands
         [Command("reset")]
+        [Hidden]
         [Description("Resets a profile to 0 XP and 100 golds")]
         [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
         public async Task ResetProfile(CommandContext ctx, DiscordMember member)
@@ -151,6 +158,7 @@ namespace Saucisse_bot.Bots.Commands
         }
 
         [Command("delete")]
+        [Hidden]
         [Description("Resets a profile to 0 XP and 100 golds")]
         [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
         public async Task DeleteProfile(CommandContext ctx, DiscordMember member)
@@ -161,6 +169,7 @@ namespace Saucisse_bot.Bots.Commands
             {
 
             }
-        }
+        } 
+        #endregion
     }
 }
