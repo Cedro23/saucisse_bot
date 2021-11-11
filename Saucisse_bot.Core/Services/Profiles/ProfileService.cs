@@ -7,13 +7,19 @@ using System.Threading.Tasks;
 
 namespace Saucisse_bot.Core.Services.Profiles
 {
+    public struct Result
+    {
+        public bool IsOk;
+        public string ErrMsg;
+    }
+
     public interface IProfileService
     {
-        Task<Profile> GetProfileAsync(ulong memberId, ulong guildId);
-        Task<bool> CreateProfileAsync(ulong memberId, ulong guildId);
-        Task<bool> ResetProfileAsync(ulong memberId, ulong guildId);
-        Task<bool> DeleteProfileAsync(ulong memberId, ulong guildId);
-        Task<bool> AddGoldsAsync(ulong memberId, int amount, ulong guildId);
+        Task<Profile> GetProfileAsync(ulong guildId, ulong memberId);
+        Task<bool> CreateProfileAsync(ulong guildId, ulong memberId);
+        Task<Result> ResetProfileAsync(ulong guildId, ulong memberId);
+        Task<Result> DeleteProfileAsync(ulong guildId, ulong memberId);
+        Task<Result> AddGoldsAsync(ulong guildId, ulong memberId, int amount);
         Task<List<Profile>> GetProfileListAsync(ulong guildId);
     }
 
@@ -26,7 +32,7 @@ namespace Saucisse_bot.Core.Services.Profiles
             _options = options;
         }
 
-        public async Task<Profile> GetProfileAsync(ulong memberId, ulong guildId)
+        public async Task<Profile> GetProfileAsync(ulong guildId, ulong memberId)
         {
             using var context = new RPGContext(_options);
 
@@ -39,7 +45,7 @@ namespace Saucisse_bot.Core.Services.Profiles
             return profile;
         }
 
-        public async Task<bool> CreateProfileAsync(ulong memberId, ulong guildId)
+        public async Task<bool> CreateProfileAsync(ulong guildId, ulong memberId)
         {
             using var context = new RPGContext(_options);
 
@@ -63,34 +69,115 @@ namespace Saucisse_bot.Core.Services.Profiles
         }
 
         #region Manage profile
-
-        public async Task<bool> AddGoldsAsync(ulong memberId, int amount, ulong guildId)
+        public async Task<Result> ResetProfileAsync(ulong guildId, ulong memberId)
         {
+            Result response = new Result();
+            response.IsOk = false;
+            response.ErrMsg = string.Empty;
+
+            using var context = new RPGContext(_options);
+            var profile = await context.Profiles
+                .Where(x => x.GuildId == guildId)
+                .FirstOrDefaultAsync(x => x.DiscordId == memberId).ConfigureAwait(false);
+
+            if (profile != null)
+            {
+                profile.Gold = 100;
+                profile.Xp = 0;
+            }
+            else
+            {
+                response.ErrMsg = "Could not find the account";
+                return response;
+            }
+
+            try
+            {
+                context.Update(profile);
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (System.Exception e)
+            {
+                response.ErrMsg = e.Message;
+                return response;
+            }
+            response.IsOk = true;
+            return response;
+        }
+
+        public async Task<Result> DeleteProfileAsync(ulong guildId, ulong memberId)
+        {
+            Result response = new Result();
+            response.IsOk = false;
+            response.ErrMsg = string.Empty;
+
+            using var context = new RPGContext(_options);
+            var profile = await context.Profiles
+                .Where(x => x.GuildId == guildId)
+                .FirstOrDefaultAsync(x => x.DiscordId == memberId).ConfigureAwait(false);
+
+            if (profile != null)
+            {
+                try
+                {
+                    context.Remove(profile);
+                    await context.SaveChangesAsync().ConfigureAwait(false);
+                }
+                catch (System.Exception e)
+                {
+                    response.ErrMsg = e.Message;
+                    return response;
+                }
+            }
+            else
+            {
+                response.ErrMsg = "Could not find the account";
+                return response;
+            }
+            response.IsOk = true;
+            return response;
+        }
+
+        /// <summary>
+        /// Adds certain amount of golds to a profile.
+        /// Returns a boolean based on the success of the operation.
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <param name="amount"></param>
+        /// <param name="guildId"></param>
+        /// <returns></returns>
+        public async Task<Result> AddGoldsAsync(ulong guildId, ulong memberId, int amount)
+        {
+            Result response = new Result();
+            response.IsOk = false;
+            response.ErrMsg = string.Empty;
+
             using var context = new RPGContext(_options);
 
             var profile = await context.Profiles
                 .Where(x => x.GuildId == guildId)
                 .FirstOrDefaultAsync(x => x.DiscordId == memberId).ConfigureAwait(false);
 
-            if (profile != null) 
-            {
+            if (profile != null)
                 profile.Gold += amount;
+            else
+            {
+                response.ErrMsg = "Could not find the account";
+                return response;
             }
 
-            context.Update(profile);
-
-            await context.SaveChangesAsync().ConfigureAwait(false);
-            return true;
-        }
-
-        public Task<bool> ResetProfileAsync(ulong memberId, ulong guildId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<bool> DeleteProfileAsync(ulong memberId, ulong guildId)
-        {
-            throw new System.NotImplementedException();
+            try
+            {
+                context.Update(profile);
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (System.Exception e)
+            {
+                response.ErrMsg = e.Message;
+                return response;
+            }
+            response.IsOk = true;
+            return response;
         }
         #endregion
     }

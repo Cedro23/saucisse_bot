@@ -77,7 +77,7 @@ namespace Saucisse_bot.Bots
             {
                 StringPrefixes = new string[] { _configJson.Prefix },
                 EnableMentionPrefix = true,
-                DmHelp = true,
+                DmHelp = false,
                 EnableDms = true,
                 Services = services
             };
@@ -91,8 +91,7 @@ namespace Saucisse_bot.Bots
             Commands.RegisterCommands<RandomCommands>();
             Commands.RegisterCommands<ItemCommands>();
             Commands.RegisterCommands<ProfileCommands>();
-            Commands.RegisterCommands<DatabaseCommands>(); 
-            Commands.RegisterCommands<AdminCommands>();
+            Commands.RegisterCommands<DatabaseCommands>();
             #endregion
 
             Client.ConnectAsync().ConfigureAwait(false);

@@ -26,7 +26,7 @@ namespace Saucisse_bot.Bots.Commands
         [Description("Creates a profile for the user who used the command")]
         public async Task CreateProfil(CommandContext ctx)
         {
-            Profile profile = await _profileService.GetProfileAsync(ctx.Member.Id, ctx.Guild.Id).ConfigureAwait(false);
+            Profile profile = await _profileService.GetProfileAsync(ctx.Guild.Id, ctx.Member.Id).ConfigureAwait(false);
             DiscordEmbedBuilder profileEmbed;
 
             if (profile != null)
@@ -40,7 +40,7 @@ namespace Saucisse_bot.Bots.Commands
             }
             else
             {
-                bool isCreated = await _profileService.CreateProfileAsync(ctx.Member.Id, ctx.Guild.Id);
+                bool isCreated = await _profileService.CreateProfileAsync(ctx.Guild.Id, ctx.Member.Id);
                 if (isCreated)
                 {
                     profileEmbed = new DiscordEmbedBuilder
@@ -82,7 +82,7 @@ namespace Saucisse_bot.Bots.Commands
 
         private async Task GetProfileToDisplayAsync(CommandContext ctx, ulong memberId)
         {
-            Profile profile = await _profileService.GetProfileAsync(memberId, ctx.Guild.Id).ConfigureAwait(false);
+            Profile profile = await _profileService.GetProfileAsync(ctx.Guild.Id, memberId).ConfigureAwait(false);
             DiscordEmbedBuilder profileEmbed;
 
             if (profile != null)
@@ -110,7 +110,7 @@ namespace Saucisse_bot.Bots.Commands
             {
                 profileEmbed = new DiscordEmbedBuilder
                 {
-                    Title = $"404 NOT FOUND",
+                    Title = $"404 PROFILE NOT FOUND",
                     Description = "If you want to create your profile, please use the command \"!profile create\"",
                     Color = DiscordColor.Red
                 };
@@ -146,29 +146,55 @@ namespace Saucisse_bot.Bots.Commands
         [Command("reset")]
         [Hidden]
         [Description("Resets a profile to 0 XP and 100 golds")]
-        [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
+        [RequireOwner]
         public async Task ResetProfile(CommandContext ctx, DiscordMember member)
         {
-            var profile = await _profileService.GetProfileAsync(ctx.Member.Id, ctx.Guild.Id).ConfigureAwait(false);
-
-            if (profile != null)
+            var result = await _profileService.ResetProfileAsync(ctx.Guild.Id, member.Id).ConfigureAwait(false);
+            var embed = new DiscordEmbedBuilder()
             {
+                Title = "Profile reset"
+            };
 
+            if (result.IsOk)
+            {
+                embed.Description = $"The reset of {member.Mention}'s profile was successful!";
+                embed.Color = DiscordColor.Green;
             }
+            else
+            {
+                embed.Description = $"The reset of {member.Mention}'s failed!";
+                embed.Color = DiscordColor.Red;
+                embed.AddField("Error", result.ErrMsg);
+            }
+
+            await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
         }
 
         [Command("delete")]
         [Hidden]
-        [Description("Resets a profile to 0 XP and 100 golds")]
-        [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
+        [Description("Deletes a profile")]
+        [RequireOwner]
         public async Task DeleteProfile(CommandContext ctx, DiscordMember member)
         {
-            var profile = await _profileService.GetProfileAsync(ctx.Member.Id, ctx.Guild.Id).ConfigureAwait(false);
-
-            if (profile != null)
+            var result = await _profileService.DeleteProfileAsync(ctx.Guild.Id, member.Id).ConfigureAwait(false);
+            var embed = new DiscordEmbedBuilder()
             {
+                Title = "Profile deletion"
+            };
 
+            if (result.IsOk)
+            {
+                embed.Description = $"{member.Mention}'s profile was successfuly deleted!";
+                embed.Color = DiscordColor.Green;
             }
+            else
+            {
+                embed.Description = $"{member.Mention}'s profile deletion failed!";
+                embed.Color = DiscordColor.Red;
+                embed.AddField("Error", result.ErrMsg);
+            }
+
+            await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
         } 
         #endregion
     }
