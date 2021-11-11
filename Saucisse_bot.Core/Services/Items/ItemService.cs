@@ -49,7 +49,7 @@ namespace Saucisse_bot.Core.Services.Items
             return await context.Items.ToListAsync<Item>().ConfigureAwait(false);
         }
 
-        public async Task<bool> PurchaseItemAsync(ulong discordId, ulong guildId, string itemName)
+        public async Task<bool> PurchaseItemAsync(ulong memeberId, ulong guildId, string itemName)
         {
             using var context = new RPGContext(_options);
 
@@ -57,7 +57,7 @@ namespace Saucisse_bot.Core.Services.Items
 
             if (item == null) { return false; }
 
-            Profile profile = await _profileService.GetProfileAsync(discordId, guildId).ConfigureAwait(false);
+            Profile profile = await _profileService.GetProfileAsync(guildId, memeberId).ConfigureAwait(false);
 
             if (profile.Gold < item.Price) { return false; }
 

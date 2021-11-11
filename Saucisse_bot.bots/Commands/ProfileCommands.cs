@@ -9,6 +9,13 @@ using System.Threading.Tasks;
 
 namespace Saucisse_bot.Bots.Commands
 {
+    // List of user commands :
+    // create
+    // show
+    // list
+    // List of admin commands :
+    // reset
+    // delete
     [Group("profile")]
     [Description("These commands revolve around users profiles")]
     public class ProfileCommands : BaseCommandModule
@@ -162,7 +169,34 @@ namespace Saucisse_bot.Bots.Commands
             }
             else
             {
-                embed.Description = $"The reset of {member.Mention}'s failed!";
+                embed.Description = $"The reset of {member.Mention}'s profile failed!";
+                embed.Color = DiscordColor.Red;
+                embed.AddField("Error", result.ErrMsg);
+            }
+
+            await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
+        }
+
+        [Command("resetall")]
+        [Hidden]
+        [Description("Resets a profile to 0 XP and 100 golds")]
+        [RequireOwner]
+        public async Task ResetAllProfiles(CommandContext ctx)
+        {
+            var result = await _profileService.ResetAllProfilesAsync(ctx.Guild.Id).ConfigureAwait(false);
+            var embed = new DiscordEmbedBuilder()
+            {
+                Title = "Global profile reset"
+            };
+
+            if (result.IsOk)
+            {
+                embed.Description = $"The reset of all profiles was successful!";
+                embed.Color = DiscordColor.Green;
+            }
+            else
+            {
+                embed.Description = $"The reset of all profiles failed!";
                 embed.Color = DiscordColor.Red;
                 embed.AddField("Error", result.ErrMsg);
             }
@@ -195,7 +229,34 @@ namespace Saucisse_bot.Bots.Commands
             }
 
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
-        } 
+        }
+
+        [Command("deleteall")]
+        [Hidden]
+        [Description("Deletes a profile")]
+        [RequireOwner]
+        public async Task DeleteAllProfiles(CommandContext ctx)
+        {
+            var result = await _profileService.DeleteAllProfilesAsync(ctx.Guild.Id).ConfigureAwait(false);
+            var embed = new DiscordEmbedBuilder()
+            {
+                Title = "Global profile deletion"
+            };
+
+            if (result.IsOk)
+            {
+                embed.Description = $"All profiles were successfuly deleted!";
+                embed.Color = DiscordColor.Green;
+            }
+            else
+            {
+                embed.Description = $"The deletion of all profiles failed!";
+                embed.Color = DiscordColor.Red;
+                embed.AddField("Error", result.ErrMsg);
+            }
+
+            await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
+        }
         #endregion
     }
 }

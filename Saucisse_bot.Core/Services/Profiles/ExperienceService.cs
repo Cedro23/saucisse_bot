@@ -26,7 +26,7 @@ namespace Saucisse_bot.Core.Services.Profiles
         {
             using var context = new RPGContext(_options);
 
-            Profile profile = await _profileService.GetProfileAsync(memberId, guildId).ConfigureAwait(false);
+            Profile profile = await _profileService.GetProfileAsync(guildId, memberId).ConfigureAwait(false);
 
             int levelBefore = profile.Level;
 

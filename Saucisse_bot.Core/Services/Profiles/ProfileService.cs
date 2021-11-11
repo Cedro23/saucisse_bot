@@ -18,7 +18,9 @@ namespace Saucisse_bot.Core.Services.Profiles
         Task<Profile> GetProfileAsync(ulong guildId, ulong memberId);
         Task<bool> CreateProfileAsync(ulong guildId, ulong memberId);
         Task<Result> ResetProfileAsync(ulong guildId, ulong memberId);
+        Task<Result> ResetAllProfilesAsync(ulong guildId);
         Task<Result> DeleteProfileAsync(ulong guildId, ulong memberId);
+        Task<Result> DeleteAllProfilesAsync(ulong guildId);
         Task<Result> AddGoldsAsync(ulong guildId, ulong memberId, int amount);
         Task<List<Profile>> GetProfileListAsync(ulong guildId);
     }
@@ -105,6 +107,45 @@ namespace Saucisse_bot.Core.Services.Profiles
             return response;
         }
 
+        public async Task<Result> ResetAllProfilesAsync(ulong guildId)
+        {
+            Result response = new Result();
+            response.IsOk = false;
+            response.ErrMsg = string.Empty;
+
+            using var context = new RPGContext(_options);
+            var profiles = await context.Profiles
+                                        .Where(x => x.GuildId == guildId)
+                                        .ToListAsync<Profile>().ConfigureAwait(false);
+
+            if (profiles.Count > 0)
+            {
+                for (int i = 0; i < profiles.Count; i++)
+                {
+                    profiles[i].Gold = 100;
+                    profiles[i].Xp = 0;
+                } 
+            }
+            else
+            {
+                response.ErrMsg = "There are no users on this server";
+                return response;
+            }
+            
+            try
+            {
+                context.UpdateRange(profiles);
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (System.Exception e)
+            {
+                response.ErrMsg = e.Message;
+                return response;
+            }
+            response.IsOk = true;
+            return response;
+        }
+
         public async Task<Result> DeleteProfileAsync(ulong guildId, ulong memberId)
         {
             Result response = new Result();
@@ -134,6 +175,40 @@ namespace Saucisse_bot.Core.Services.Profiles
                 response.ErrMsg = "Could not find the account";
                 return response;
             }
+            response.IsOk = true;
+            return response;
+        }
+
+        public async Task<Result> DeleteAllProfilesAsync(ulong guildId)
+        {
+            Result response = new Result();
+            response.IsOk = false;
+            response.ErrMsg = string.Empty;
+
+            using var context = new RPGContext(_options);
+            var profiles = await context.Profiles
+                                        .Where(x => x.GuildId == guildId)
+                                        .ToListAsync<Profile>().ConfigureAwait(false);
+
+            if (profiles.Count > 0)
+            {
+                try
+                {
+                    context.RemoveRange(profiles);
+                    await context.SaveChangesAsync().ConfigureAwait(false);
+                }
+                catch (System.Exception e)
+                {
+                    response.ErrMsg = e.Message;
+                    return response;
+                }
+            }
+            else
+            {
+                response.ErrMsg = "There are no users on this server";
+                return response;
+            }
+            
             response.IsOk = true;
             return response;
         }
