@@ -17,7 +17,7 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 ```
 
 ### 1.2. Migration
-> Create the first migration commit
+> Create a migration commit
 ```batch
 dotnet-ef migrations add [name_of_migration] -p ../Saucisse_bot.DAL.Migrations/Saucisse_bot.DAL.Migrations.csproj --context Saucisse_bot.DAL.RPGContext
 ```
