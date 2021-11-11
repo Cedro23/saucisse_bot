@@ -8,7 +8,7 @@ namespace Saucisse_bot.Core.Services.Profiles
 {
     public interface IExperienceService
     {
-        Task<GrantXpViewModel> GrantXpAsync(ulong discordId, ulong guildId, int xpAmount);
+        Task<GrantXpViewModel> GrantXpAsync(ulong memberId, ulong guildId, int xpAmount);
     }
 
     public class ExperienceService : IExperienceService
@@ -26,7 +26,7 @@ namespace Saucisse_bot.Core.Services.Profiles
         {
             using var context = new RPGContext(_options);
 
-            Profile profile = await _profileService.GetOrCreateProfileAsync(memberId, guildId).ConfigureAwait(false);
+            Profile profile = await _profileService.GetProfileAsync(memberId, guildId).ConfigureAwait(false);
 
             int levelBefore = profile.Level;
 

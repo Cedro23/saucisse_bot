@@ -9,9 +9,10 @@ namespace Saucisse_bot.Core.Services.Profiles
 {
     public interface IProfileService
     {
-        Task<Profile> GetOrCreateProfileAsync(ulong discordId, ulong guildId);
-        Task<bool> AddGolds(ulong discordId, int amount, ulong guildId);
-        Task<List<Profile>> GetProfileList(ulong discordId);
+        Task<Profile> GetProfileAsync(ulong memberId, ulong guildId);
+        Task<Profile> CreateProfileAsync(ulong memberId, ulong guildId);
+        Task<bool> AddGoldsAsync(ulong memberId, int amount, ulong guildId);
+        Task<List<Profile>> GetProfileListAsync(ulong guildId);
     }
 
     public class ProfileService : IProfileService
@@ -23,7 +24,7 @@ namespace Saucisse_bot.Core.Services.Profiles
             _options = options;
         }
 
-        public async Task<Profile> GetOrCreateProfileAsync(ulong discordId, ulong guildId)
+        public async Task<Profile> GetProfileAsync(ulong memberId, ulong guildId)
         {
             using var context = new RPGContext(_options);
 
@@ -31,13 +32,18 @@ namespace Saucisse_bot.Core.Services.Profiles
                 .Where(x => x.GuildId == guildId)
                 .Include(x => x.Items)
                 .Include(x => x.Items).ThenInclude(x => x.Item)
-                .FirstOrDefaultAsync(x => x.DiscordId == discordId).ConfigureAwait(false);
+                .FirstOrDefaultAsync(x => x.DiscordId == memberId).ConfigureAwait(false);
 
-            if (profile != null) { return profile; }
+            return profile;
+        }
 
-            profile = new Profile
+        public async Task<Profile> CreateProfileAsync(ulong memberId, ulong guildId)
+        {
+            using var context = new RPGContext(_options);
+
+            var profile = new Profile
             {
-                DiscordId = discordId,
+                DiscordId = memberId,
                 GuildId = guildId,
                 Gold = 100
             };
@@ -48,22 +54,21 @@ namespace Saucisse_bot.Core.Services.Profiles
             return profile;
         }
 
-        public async Task<List<Profile>> GetProfileList(ulong guildId)
+        public async Task<List<Profile>> GetProfileListAsync(ulong guildId)
         {
             using var context = new RPGContext(_options);
             return await context.Profiles.Where(x => x.GuildId == guildId).ToListAsync<Profile>().ConfigureAwait(false);
         }
 
-
         #region Manage profile
 
-        public async Task<bool> AddGolds(ulong discordId, int amount, ulong guildId)
+        public async Task<bool> AddGoldsAsync(ulong memberId, int amount, ulong guildId)
         {
             using var context = new RPGContext(_options);
 
             var profile = await context.Profiles
                 .Where(x => x.GuildId == guildId)
-                .FirstOrDefaultAsync(x => x.DiscordId == discordId).ConfigureAwait(false);
+                .FirstOrDefaultAsync(x => x.DiscordId == memberId).ConfigureAwait(false);
 
             if (profile != null) 
             {
@@ -75,7 +80,6 @@ namespace Saucisse_bot.Core.Services.Profiles
             await context.SaveChangesAsync().ConfigureAwait(false);
             return true;
         }
-
         #endregion
     }
 }

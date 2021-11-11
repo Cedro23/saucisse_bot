@@ -8,17 +8,60 @@ using System.Threading.Tasks;
 
 namespace Saucisse_bot.Bots.Commands
 {
+    [Group("profile")]
     public class ProfileCommands : BaseCommandModule
     {
-        private readonly IProfileService _profileService;
+        private IProfileService _profileService;
 
         public ProfileCommands(IProfileService profileService)
         {
             _profileService = profileService;
         }
 
-        #region Display profile
-        [Command("profile")]
+        [Command("create")]
+        [Description("Creates a profile for the user who used the command")]
+        public async Task CreateProfil(CommandContext ctx)
+        {
+            Profile profile = await _profileService.GetProfileAsync(ctx.Member.Id, ctx.Guild.Id).ConfigureAwait(false);
+            DiscordEmbedBuilder profileEmbed;
+
+            if (profile != null)
+            {
+                profileEmbed = new DiscordEmbedBuilder
+                {
+                    Title = $"{ctx.Member.Mention}, your profile already exists",
+                    Description = "Your profile already exists, please use \"!profile show\" to display it",
+                    Color = DiscordColor.Yellow
+                };
+
+            }
+            else
+            {
+                profile = await _profileService.CreateProfileAsync(ctx.Member.Id, ctx.Guild.Id);
+                if (profile != null)
+                {
+                    profileEmbed = new DiscordEmbedBuilder
+                    {
+                        Title = $"{ctx.Member.Mention}, your profile has been created",
+                        Description = "Your profile has correctly been created",
+                        Color = DiscordColor.Green
+                    };
+                }
+                else
+                {
+                    profileEmbed = new DiscordEmbedBuilder
+                    {
+                        Title = $"{ctx.Member.Mention}, there was a problem creating your profile",
+                        Description = "Your profile was not created, please try using the command again, or call for an admin",
+                        Color = DiscordColor.Red
+                    };
+                }
+            }
+            await ctx.Channel.SendMessageAsync(embed: profileEmbed).ConfigureAwait(false);
+        }
+
+        #region Show profile
+        [Command("show")]
         [Cooldown(1, 30, CooldownBucketType.User)]
         [Description("Returns the server based profile of the user who used the command")]
         public async Task Profile(CommandContext ctx)
@@ -26,7 +69,7 @@ namespace Saucisse_bot.Bots.Commands
             await GetProfileToDisplayAsync(ctx, ctx.Member.Id);
         }
 
-        [Command("profile")]
+        [Command("show")]
         [Cooldown(1, 30, CooldownBucketType.User)]
         [Description("Returns the server based profile of the mentionned user")]
         public async Task Profile(CommandContext ctx, DiscordMember member)
@@ -36,37 +79,49 @@ namespace Saucisse_bot.Bots.Commands
 
         private async Task GetProfileToDisplayAsync(CommandContext ctx, ulong memberId)
         {
-            Profile profile = await _profileService.GetOrCreateProfileAsync(memberId, ctx.Guild.Id).ConfigureAwait(false);
+            Profile profile = await _profileService.GetProfileAsync(memberId, ctx.Guild.Id).ConfigureAwait(false);
+            DiscordEmbedBuilder profileEmbed;
 
-            DiscordMember member = await ctx.Guild.GetMemberAsync(profile.DiscordId);
-
-            DiscordEmbedBuilder.EmbedThumbnail thumbnail = new DiscordEmbedBuilder.EmbedThumbnail();
-            thumbnail.Url = member.AvatarUrl;
-
-            var profileEmbed = new DiscordEmbedBuilder
+            if(profile != null)
             {
-                Title = $"{member.DisplayName}'s Profile",
-                Thumbnail = thumbnail
-            };
+                DiscordMember member = await ctx.Guild.GetMemberAsync(profile.DiscordId);
 
-            profileEmbed.AddField("Level", profile.Level.ToString());
-            profileEmbed.AddField("Xp", profile.Xp.ToString());
-            profileEmbed.AddField("Gold", profile.Gold.ToString());
-            if (profile.Items.Count > 0)
+                DiscordEmbedBuilder.EmbedThumbnail thumbnail = new DiscordEmbedBuilder.EmbedThumbnail();
+                thumbnail.Url = member.AvatarUrl;
+
+                profileEmbed = new DiscordEmbedBuilder
+                {
+                    Title = $"{member.DisplayName}'s Profile",
+                    Thumbnail = thumbnail
+                };
+
+                profileEmbed.AddField("Level", profile.Level.ToString());
+                profileEmbed.AddField("Xp", profile.Xp.ToString());
+                profileEmbed.AddField("Gold", profile.Gold.ToString());
+                if (profile.Items.Count > 0)
+                {
+                    profileEmbed.AddField("Items", string.Join(", ", profile.Items.Select(x => x.Item.Name)));
+                }
+            }
+            else
             {
-                profileEmbed.AddField("Items", string.Join(", ", profile.Items.Select(x => x.Item.Name)));
+                profileEmbed = new DiscordEmbedBuilder
+                {
+                    Title = $"404 NOT FOUND",
+                    Description = "If you want to create your profile, please use the command \"!profile create\"",
+                    Color = DiscordColor.Red
+                };
             }
 
             await ctx.Channel.SendMessageAsync(embed: profileEmbed).ConfigureAwait(false);
         }
         #endregion
 
-        [Command("profilelist")]
+        [Command("list")]
         [Description("Returns a list of all profiles existing on this server")]
         public async Task ProfileList(CommandContext ctx)
         {
-            //var storedProfiles = 
-            var profiles = await _profileService.GetProfileList(ctx.Guild.Id).ConfigureAwait(false);
+            var profiles = await _profileService.GetProfileListAsync(ctx.Guild.Id).ConfigureAwait(false);
             var embed = new DiscordEmbedBuilder()
             {
                 Title = "List of profiles :",
@@ -80,22 +135,32 @@ namespace Saucisse_bot.Bots.Commands
             }
 
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
-
-
         }
 
-        #region Manage profil (owner only)
-        [Command("addgolds")]
-        [RequireOwner]
-        [Description("Grants the owner the possibility to add golds to a profile")]
-        public async Task AddGolds(CommandContext ctx, DiscordMember member, int amount)
+        [Command("reset")]
+        [Description("Resets a profile to 0 XP and 100 golds")]
+        [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
+        public async Task ResetProfile(CommandContext ctx, DiscordMember member)
         {
-            var result = await _profileService.AddGolds(member.Id, amount, ctx.Guild.Id).ConfigureAwait(false);
+            var profile = await _profileService.GetProfileAsync(ctx.Member.Id, ctx.Guild.Id).ConfigureAwait(false);
 
-            if (!result) await ctx.Channel.SendMessageAsync($"There was a problem adding golds to {member.DisplayName}!").ConfigureAwait(false);
+            if (profile != null)
+            {
 
-            await ctx.Channel.SendMessageAsync($"Succesfully added {amount} golds to {member.DisplayName}!").ConfigureAwait(false);
+            }
         }
-        #endregion
+
+        [Command("delete")]
+        [Description("Resets a profile to 0 XP and 100 golds")]
+        [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
+        public async Task DeleteProfile(CommandContext ctx, DiscordMember member)
+        {
+            var profile = await _profileService.GetProfileAsync(ctx.Member.Id, ctx.Guild.Id).ConfigureAwait(false);
+
+            if (profile != null)
+            {
+
+            }
+        }
     }
 }

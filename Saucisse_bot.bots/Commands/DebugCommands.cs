@@ -166,11 +166,5 @@ namespace Saucisse_bot.Bots.Commands
 
             if (!succeeded) { return; }
         }
-
-        [Command("testexp")]
-        public async Task TestExp(CommandContext ctx)
-        {
-            await _expHandler.GrantExp(ctx, 10, 100);
-        }
     }
 }

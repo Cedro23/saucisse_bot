@@ -57,7 +57,7 @@ namespace Saucisse_bot.Core.Services.Items
 
             if (item == null) { return false; }
 
-            Profile profile = await _profileService.GetOrCreateProfileAsync(discordId, guildId).ConfigureAwait(false);
+            Profile profile = await _profileService.GetProfileAsync(discordId, guildId).ConfigureAwait(false);
 
             if (profile.Gold < item.Price) { return false; }
 
