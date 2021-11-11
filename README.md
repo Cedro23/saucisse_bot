@@ -36,6 +36,9 @@ To build the solution simply double click the "build.bat" script.
 ### 3.2. Debug
 
 ### 3.3. Profile
+#### 3.3.1. User commands
+
+#### 3.3.2. Admin commands
 
 ### 3.4. Random
 
