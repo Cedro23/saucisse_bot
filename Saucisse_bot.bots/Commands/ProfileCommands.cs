@@ -9,13 +9,6 @@ using System.Threading.Tasks;
 
 namespace Saucisse_bot.Bots.Commands
 {
-    // List of user commands :
-    // create
-    // show
-    // list
-    // List of admin commands :
-    // reset
-    // delete
     [Group("profile")]
     [Description("These commands revolve around users profiles")]
     public class ProfileCommands : BaseCommandModule
