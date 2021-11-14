@@ -37,9 +37,18 @@ To build the solution simply double click the "build.bat" script.
 
 ### 3.3. Profile
 #### 3.3.1. User commands
-
+```
+profile create
+profile show @member
+profile list
+```
 #### 3.3.2. Admin commands
-
+```
+profile reset @member
+profile resetall
+profile delete @member
+profile deleteall
+```
 ### 3.4. Random
 
 ## 4. Other features
