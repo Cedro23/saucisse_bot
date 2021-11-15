@@ -24,7 +24,7 @@ namespace Saucisse_bot.Bots.Commands
         [Command("create")]
         [Cooldown(1, 30, CooldownBucketType.User)]
         [Description("Creates a profile for the user who used the command")]
-        public async Task CreateProfil(CommandContext ctx)
+        public async Task CreateProfile(CommandContext ctx)
         {
             Profile profile = await _profileService.GetProfileAsync(ctx.Guild.Id, ctx.Member.Id).ConfigureAwait(false);
             DiscordEmbedBuilder profileEmbed;
@@ -139,10 +139,53 @@ namespace Saucisse_bot.Bots.Commands
             }
 
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
-        } 
+        }
         #endregion
 
         #region Admin commands
+        [Command("create")]
+        [Hidden]
+        [Description("Creates a profile for the specified user")]
+        [RequireOwner]
+        public async Task CreateProfile(CommandContext ctx, DiscordMember member)
+        {
+            Profile profile = await _profileService.GetProfileAsync(ctx.Guild.Id, member.Id).ConfigureAwait(false);
+            DiscordEmbedBuilder profileEmbed;
+
+            if (profile != null)
+            {
+                profileEmbed = new DiscordEmbedBuilder
+                {
+                    Title = "Your profile already exists",
+                    Description = $"{member.Mention}'s profile already exists, please use \"!profile show {member.Mention}\" to display it",
+                    Color = DiscordColor.Yellow
+                };
+            }
+            else
+            {
+                bool isCreated = await _profileService.CreateProfileAsync(ctx.Guild.Id, member.Id);
+                if (isCreated)
+                {
+                    profileEmbed = new DiscordEmbedBuilder
+                    {
+                        Title = "Your profile has been created",
+                        Description = $"{member.Mention}'s profile has correctly been created",
+                        Color = DiscordColor.Green
+                    };
+                }
+                else
+                {
+                    profileEmbed = new DiscordEmbedBuilder
+                    {
+                        Title = "There was a problem creating your profile",
+                        Description = $"{member.Mention}'s profile was not created",
+                        Color = DiscordColor.Red
+                    };
+                }
+            }
+            await ctx.Channel.SendMessageAsync(embed: profileEmbed).ConfigureAwait(false);
+        }
+
         [Command("reset")]
         [Hidden]
         [Description("Resets a profile to 0 XP and 100 golds")]
