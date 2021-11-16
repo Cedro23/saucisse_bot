@@ -41,7 +41,7 @@ They are all based on the current guild.
 #### 3.3.1. User commands
 - `create` : *create a profile for the user using the command*
 - `show` : *displays the profile of the user using the command*
-- `show @member` : *displays the profile of a user*
+- `show [@user]` : *displays the profile of a user*
 - `list` : *displays a list of all existing users and their golds*
 
 #### 3.3.2. Admin commands
