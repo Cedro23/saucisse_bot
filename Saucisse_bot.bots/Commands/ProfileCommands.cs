@@ -146,7 +146,7 @@ namespace Saucisse_bot.Bots.Commands
         [Command("create")]
         [Hidden]
         [Description("Creates a profile for the specified user")]
-        [RequireOwner]
+        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner", "Admin")]
         public async Task CreateProfile(CommandContext ctx, DiscordMember member)
         {
             Profile profile = await _profileService.GetProfileAsync(ctx.Guild.Id, member.Id).ConfigureAwait(false);
@@ -189,7 +189,7 @@ namespace Saucisse_bot.Bots.Commands
         [Command("reset")]
         [Hidden]
         [Description("Resets a profile to 0 XP and 100 golds")]
-        [RequireOwner]
+        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner", "Admin")]
         public async Task ResetProfile(CommandContext ctx, DiscordMember member)
         {
             var result = await _profileService.ResetProfileAsync(ctx.Guild.Id, member.Id).ConfigureAwait(false);
@@ -216,7 +216,7 @@ namespace Saucisse_bot.Bots.Commands
         [Command("resetall")]
         [Hidden]
         [Description("Resets a profile to 0 XP and 100 golds")]
-        [RequireOwner]
+        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner", "Admin")]
         public async Task ResetAllProfiles(CommandContext ctx)
         {
             var result = await _profileService.ResetAllProfilesAsync(ctx.Guild.Id).ConfigureAwait(false);
@@ -243,7 +243,7 @@ namespace Saucisse_bot.Bots.Commands
         [Command("delete")]
         [Hidden]
         [Description("Deletes a profile")]
-        [RequireOwner]
+        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner", "Admin")]
         public async Task DeleteProfile(CommandContext ctx, DiscordMember member)
         {
             var result = await _profileService.DeleteProfileAsync(ctx.Guild.Id, member.Id).ConfigureAwait(false);
@@ -270,7 +270,7 @@ namespace Saucisse_bot.Bots.Commands
         [Command("deleteall")]
         [Hidden]
         [Description("Deletes a profile")]
-        [RequireOwner]
+        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner", "Admin")]
         public async Task DeleteAllProfiles(CommandContext ctx)
         {
             var result = await _profileService.DeleteAllProfilesAsync(ctx.Guild.Id).ConfigureAwait(false);
@@ -297,7 +297,7 @@ namespace Saucisse_bot.Bots.Commands
         [Command("avatar")]
         [Hidden]
         [Description("Displays the avatar of the given user")]
-        [RequireOwner]
+        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner", "Admin")]
         public async Task DisplayAvatar(CommandContext ctx, DiscordMember member)
         {
             var user = await ctx.Guild.GetMemberAsync(member.Id).ConfigureAwait(false);

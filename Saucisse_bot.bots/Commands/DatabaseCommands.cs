@@ -50,7 +50,7 @@ namespace Saucisse_bot.Bots.Commands
         [Command("tableinfo")]
         public async Task TableInfo(CommandContext ctx)
         {
-            Dictionary<string, int> tableList = await _databaseService.GetTablesCount().ConfigureAwait(false);
+            Dictionary<string, int> tableList = _databaseService.GetTablesCount();
 
 
             var embed = new DiscordEmbedBuilder()

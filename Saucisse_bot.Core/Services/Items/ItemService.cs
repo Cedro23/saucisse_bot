@@ -4,16 +4,24 @@ using Saucisse_bot.DAL;
 using Saucisse_bot.DAL.Models.Items;
 using Saucisse_bot.DAL.Models.Profiles;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Saucisse_bot.Core.Services.Items
 {
+    public struct ResultItem
+    {
+        public Item Item;
+        public bool IsOk;
+        public string ErrMsg;
+    }
+
     public interface IItemService
     {
         Task CreateNewItemAsync(Item item);
-        Task<Item> GetItemByNameAsync(string itemName);
-        Task<List<Item>> GetItemList();
-        Task<bool> PurchaseItemAsync(ulong discordId, ulong guildId, string itemName);
+        Task<Item> GetItemByNameAsync(ulong guildId, string itemName);
+        Task<List<Item>> GetItemList(ulong guildId);
+        Task<ResultItem> PurchaseItemAsync(ulong discordId, ulong guildId, string itemName);
     }
 
     public class ItemService : IItemService
@@ -36,35 +44,45 @@ namespace Saucisse_bot.Core.Services.Items
             await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task<Item> GetItemByNameAsync(string itemName)
+        public async Task<Item> GetItemByNameAsync(ulong guildId, string itemName)
         {
             using var context = new RPGContext(_options);
 
-            return await context.Items.FirstOrDefaultAsync(x => x.Name.ToLower() == itemName.ToLower()).ConfigureAwait(false);
+            return await context.Items.Where(x => x.GuildId == guildId).FirstOrDefaultAsync(x => x.Name.ToLower() == itemName.ToLower()).ConfigureAwait(false);
         }
 
-        public async Task<List<Item>> GetItemList()
-        {
-            using var context = new RPGContext(_options); 
-            return await context.Items.ToListAsync<Item>().ConfigureAwait(false);
-        }
-
-        public async Task<bool> PurchaseItemAsync(ulong memeberId, ulong guildId, string itemName)
+        public async Task<List<Item>> GetItemList(ulong guildId)
         {
             using var context = new RPGContext(_options);
+            return await context.Items.Where(x => x.GuildId == guildId).ToListAsync<Item>().ConfigureAwait(false);
+        }
 
-            Item item = await GetItemByNameAsync(itemName).ConfigureAwait(false);
+        public async Task<ResultItem> PurchaseItemAsync(ulong memeberId, ulong guildId, string itemName)
+        {
+            using var context = new RPGContext(_options);
+            ResultItem res = new ResultItem();
+            res.Item = await GetItemByNameAsync(guildId, itemName).ConfigureAwait(false);
 
-            if (item == null) { return false; }
+            if (res.Item == null)
+            {
+                res.ErrMsg = "This item does not exist.";
+                res.IsOk = false;
+                return res;
+            }
 
             Profile profile = await _profileService.GetProfileAsync(guildId, memeberId).ConfigureAwait(false);
 
-            if (profile.Gold < item.Price) { return false; }
+            if (profile.Gold < res.Item.Price)
+            {
+                res.ErrMsg = $"Not enough golds. You need {res.Item.Price - profile.Gold} more golds.";
+                res.IsOk = false;
+                return res;
+            }
 
-            profile.Gold -= item.Price;
+            profile.Gold -= res.Item.Price;
             profile.Items.Add(new ProfileItem
             {
-                ItemId = item.Id,
+                ItemId = res.Item.Id,
                 ProfileId = profile.Id
             });
 
@@ -72,7 +90,8 @@ namespace Saucisse_bot.Core.Services.Items
 
             await context.SaveChangesAsync().ConfigureAwait(false);
 
-            return true;
+            res.IsOk = true;
+            return res;
         }
     }
 }

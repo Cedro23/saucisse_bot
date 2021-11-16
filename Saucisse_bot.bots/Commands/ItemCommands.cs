@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Saucisse_bot.Bots.Commands
 {
+    [Group("item")]
     public class ItemCommands : BaseCommandModule
     {
         private readonly IItemService _itemService;
@@ -18,7 +19,7 @@ namespace Saucisse_bot.Bots.Commands
             _itemService = itemService;
         }
 
-        [Command("createitem")]
+        [Command("create")]
         [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner", "Admin")]
         public async Task CreateItem(CommandContext ctx)
         {
@@ -27,16 +28,15 @@ namespace Saucisse_bot.Bots.Commands
             var itemNameStep = new StringStep("What will the item be called?", itemDescriptionStep);
 
             var item = new Item();
-
+            item.GuildId = ctx.Guild.Id;
+            
             itemNameStep.OnValidResult += (result) => item.Name = result;
             itemDescriptionStep.OnValidResult += (result) => item.Description = result;
             itemPriceStep.OnValidResult += (result) => item.Price = result;
 
-            var userChannel = await ctx.Member.CreateDmChannelAsync().ConfigureAwait(false);
-
             var inputDialogueHandler = new DialogueHandler(
                 ctx.Client,
-                userChannel,
+                ctx.Channel,
                 ctx.User,
                 itemNameStep
             );
@@ -47,10 +47,10 @@ namespace Saucisse_bot.Bots.Commands
 
             await _itemService.CreateNewItemAsync(item).ConfigureAwait(false);
 
-            await userChannel.SendMessageAsync($"Item {item.Name} succesfully created with Id: {item.Id}").ConfigureAwait(false);
+            await ctx.Channel.SendMessageAsync($"Item {item.Name} succesfully created with Id: {item.Id}").ConfigureAwait(false);
         }
 
-        [Command("iteminfo")]
+        [Command("info")]
         [Description("Return the informations of an item")]
         public async Task ItemInfo(CommandContext ctx)
         {
@@ -71,46 +71,97 @@ namespace Saucisse_bot.Bots.Commands
 
             if (!succeeded) { return; }
 
-            var item = await _itemService.GetItemByNameAsync(itemName).ConfigureAwait(false);
+            var item = await _itemService.GetItemByNameAsync(ctx.Guild.Id, itemName).ConfigureAwait(false);
+            var embed = new DiscordEmbedBuilder();
 
             if (item == null)
             {
-                await ctx.Channel.SendMessageAsync($"There is no item called: {itemName}");
-                return;
+                embed = new DiscordEmbedBuilder()
+                {
+                    Title = "404 NOT FOUND",
+                    Color = DiscordColor.Red
+                };
+                embed.AddField(itemName, "This item could not be found... Are you sure it's the correct name ?");
+
+            }
+            else
+            {
+                embed = new DiscordEmbedBuilder()
+                {
+                    Title = item.Name,
+                    Color = DiscordColor.Green
+                };
+                embed.AddField("Description", item.Description);
+                embed.AddField("Price", $"{item.Price} golds");
             }
 
-            await ctx.Channel.SendMessageAsync($"Name: {item.Name}, Description: {item.Description}").ConfigureAwait(false);
+            await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
         }
 
-        [Command("itemlist")]
+        [Command("list")]
         [Description("Returns the list of existing items")]
         public async Task ItemList(CommandContext ctx)
         {
-            var items = await _itemService.GetItemList().ConfigureAwait(false);
+            var items = await _itemService.GetItemList(ctx.Guild.Id).ConfigureAwait(false);
+            var embed = new DiscordEmbedBuilder();
 
-            var embedDescription = string.Empty;
-
-            foreach (var item in items)
+            if (items.Count > 0)
             {
-                embedDescription += $"{item.Id}: {item.Name} \n";
+                foreach (var item in items)
+                {
+                    embed.AddField($"{item.Id}", $"{item.Name}");
+                }
+
+                embed = new DiscordEmbedBuilder()
+                {
+                    Title = "Item list :",
+                    Color = DiscordColor.Yellow
+                }; 
             }
-
-            var embed = new DiscordEmbedBuilder()
+            else
             {
-                Title = "List of items :",
-                Description = embedDescription,
-                Color = DiscordColor.Yellow
-            };
+                embed = new DiscordEmbedBuilder()
+                {
+                    Title = "List of items :",
+                    Description = "There currently are no items on this guild",
+                    Color = DiscordColor.Red
+                };
+            }
 
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
         }
 
         [Command("buy")]
+        [Description("Adds the item to the user's inventory if he has enough golds.")]
         public async Task Buy(CommandContext ctx, params string[] itemNameSplit)
         {
             string itemName = string.Join(' ', itemNameSplit);
+            var embed = new DiscordEmbedBuilder();
 
-            await _itemService.PurchaseItemAsync(ctx.Member.Id, ctx.Guild.Id, itemName);
+            var result = await _itemService.PurchaseItemAsync(ctx.Member.Id, ctx.Guild.Id, itemName);
+
+            if (!result.IsOk)
+            {
+                embed = new DiscordEmbedBuilder()
+                {
+                    Title = "Failure!",
+                    Color = DiscordColor.Red
+                };
+                embed.AddField(itemName, result.ErrMsg);
+
+            }
+            else
+            {
+                embed = new DiscordEmbedBuilder()
+                {
+                    Title = "Succes!",
+                    Description = $"You correctly purchased {result.Item.Name}",
+                    Color = DiscordColor.Green
+                };
+            }
+
+            await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
+
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Saucisse_bot.Bots.Commands
 
         [Command("poticha")]
         [Description("Returns a random name for Basile's cat")]
-        [Cooldown(1, 300, CooldownBucketType.Guild)]
+        [Cooldown(1, 86400, CooldownBucketType.Guild)]
         public async Task GenerateRandomCatNameFromList(CommandContext ctx)
         {           
             var namesFile = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "Sources/Dictionnaries/CatList.txt"));
@@ -47,7 +47,7 @@ namespace Saucisse_bot.Bots.Commands
 
         [Command("pau")]
         [Description("Returns a random name for Pauline and renames her")]
-        [Cooldown(1, 300, CooldownBucketType.Guild)]
+        [Cooldown(1, 86400, CooldownBucketType.Guild)]
         public async Task GenerateRandomPauNameFromList(CommandContext ctx)
         {
             var namesFile = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "Sources/Dictionnaries/PauList.txt"));

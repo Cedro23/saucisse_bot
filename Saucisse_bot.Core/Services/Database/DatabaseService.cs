@@ -10,7 +10,7 @@ namespace Saucisse_bot.Core.Services.Database
     public interface IDatabaseService
     {
         Task<bool> PurgeTables(string tableName = "");
-        Task<Dictionary<string, int>> GetTablesCount();
+        Dictionary<string, int> GetTablesCount();
     }
     public class DatabaseService : IDatabaseService
     {
@@ -25,7 +25,7 @@ namespace Saucisse_bot.Core.Services.Database
             _itemService = itemService;
         }
 
-        public async Task<Dictionary<string, int>> GetTablesCount()
+        public Dictionary<string, int> GetTablesCount()
         {
             using var context = new RPGContext(_options);
 

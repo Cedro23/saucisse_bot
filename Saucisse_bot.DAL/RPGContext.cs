@@ -2,6 +2,7 @@
 using Saucisse_bot.DAL.Models.Items;
 using Saucisse_bot.DAL.Models.Profiles;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Saucisse_bot.DAL
 {
@@ -18,9 +19,9 @@ namespace Saucisse_bot.DAL
         {
             Dictionary<string, int> dbSets = new Dictionary<string, int>();
 
-            dbSets.Add("Items", this.Items.Local.Count);
-            dbSets.Add("Profiles", this.Profiles.Local.Count);
-            dbSets.Add("ProfileItems", this.ProfileItems.Local.Count);
+            dbSets.Add("Items", this.Items.Count());
+            dbSets.Add("Profiles", this.Profiles.Count());
+            dbSets.Add("ProfileItems", this.ProfileItems.Count());
 
             return dbSets;
         }
