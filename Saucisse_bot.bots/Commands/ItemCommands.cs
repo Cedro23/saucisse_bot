@@ -20,7 +20,7 @@ namespace Saucisse_bot.Bots.Commands
         }
 
         [Command("create")]
-        [RequireRoles(RoleCheckMode.SpecifiedOnly, "Owner", "Admin")]
+        [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
         public async Task CreateItem(CommandContext ctx)
         {
             var itemPriceStep = new IntStep("How much does the item cost?", null, 1);
@@ -99,7 +99,7 @@ namespace Saucisse_bot.Bots.Commands
         }
 
         [Command("list")]
-        [Description("Returns the list of existing items")]
+        [Description("Returns the list of existing items for the current guild")]
         public async Task ItemList(CommandContext ctx)
         {
             var items = await _itemService.GetItemList(ctx.Guild.Id).ConfigureAwait(false);
@@ -107,16 +107,16 @@ namespace Saucisse_bot.Bots.Commands
 
             if (items.Count > 0)
             {
-                foreach (var item in items)
-                {
-                    embed.AddField($"{item.Id}", $"{item.Name}");
-                }
-
                 embed = new DiscordEmbedBuilder()
                 {
                     Title = "Item list :",
                     Color = DiscordColor.Yellow
-                }; 
+                };
+
+                foreach (var item in items)
+                {
+                    embed.AddField($"{item.Name} [{item.Price}]", $"{item.Description}");
+                }
             }
             else
             {
