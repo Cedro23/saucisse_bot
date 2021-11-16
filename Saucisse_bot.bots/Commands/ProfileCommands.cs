@@ -293,6 +293,20 @@ namespace Saucisse_bot.Bots.Commands
 
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
         }
+
+        [Command("avatar")]
+        [Hidden]
+        [Description("Displays the avatar of the given user")]
+        [RequireOwner]
+        public async Task DisplayAvatar(CommandContext ctx, DiscordMember member)
+        {
+            var user = await ctx.Guild.GetMemberAsync(member.Id).ConfigureAwait(false);
+
+            if (user != null)
+                await ctx.Channel.SendMessageAsync(user.AvatarUrl).ConfigureAwait(false);
+            else
+                await ctx.Channel.SendMessageAsync("This user could not be found").ConfigureAwait(false);
+        }
         #endregion
     }
 }
