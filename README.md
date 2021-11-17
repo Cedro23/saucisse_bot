@@ -39,6 +39,7 @@ Here's a listing of all the existing commands.
 ### 3.3. Profile
 Profile based commands.
 They are all based on the current guild.
+Every command must start with `!profile`.
 #### 3.3.1. User commands
 - `create` : *create a profile for the user using the command*
 - `show` : *displays the profile of the user using the command*
@@ -50,12 +51,18 @@ They are all based on the current guild.
 - `resetall` : *resets all users' xp to 0 and golds to 100*
 - `delete [@user]` : *deletes a user's profile*
 - `deleteall` : *deletes all users' profiles*
+- 
 ### 3.4. Item
 Item based commands.
 They are all based on the current guild.
-### 3.4.1. User commands
-### 3.4.2. Admin commands
-
+Every command must start with `!item`.
+#### 3.4.1. User commands
+- `info [item]` : *displays the informations about the requested item if it exists*
+- `list` : *displays a list of all the items existing within the guild*
+- `buy [item]` : *adds the item to the user's inventory if he has enough golds*
+#### 3.4.2. Admin commands
+- `create` : *prompts a dialogue with the user to create a new item*
+- 
 ### 3.5. Random
 
 ## 4. Other features
