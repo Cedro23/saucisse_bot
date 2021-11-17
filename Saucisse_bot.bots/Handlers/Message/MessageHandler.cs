@@ -46,6 +46,10 @@ namespace Saucisse_bot.Bots.Handlers.Message
 
         public async Task HandleMessage(DiscordGuild guild, DiscordChannel channel, ulong userID, string message)
         {
+            Random rnd = new Random();
+            double nxtDouble;
+            string filePath = String.Empty;
+
             if (message.EndsWith("quoi", StringComparison.OrdinalIgnoreCase) || _rgQuoi.IsMatch(message.ToLower()))
                 await SendAnswerMsg(channel, "feur").ConfigureAwait(false);
             if (message.EndsWith("qui", StringComparison.OrdinalIgnoreCase) || _rgQui.IsMatch(message.ToLower()))
@@ -54,14 +58,18 @@ namespace Saucisse_bot.Bots.Handlers.Message
                 await SendAnswerMsg(channel, "Polo").ConfigureAwait(false);
             if (message.EndsWith("tg", StringComparison.OrdinalIgnoreCase))
                 await SendAnswerMsg(channel, "v c:").ConfigureAwait(false);
+            if (message.Contains("quand même", StringComparison.OrdinalIgnoreCase))
+            {
+                filePath = Path.Combine(Directory.GetCurrentDirectory(), "Sources\\Images\\kan_meme.jpg");
+                await SendFile(channel, "", filePath);
+            }
 
             if (userID == _usersJson.Roro)
             {
-                Random rnd = new Random();
-                double nxtDouble = rnd.NextDouble();
+                nxtDouble = rnd.NextDouble();
                 if (nxtDouble <= 0.05f)
                 {
-                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Sources\\Images\\oeuf.png");
+                    filePath = Path.Combine(Directory.GetCurrentDirectory(), "Sources\\Images\\oeuf.png");
                     await SendFile(channel, $"Nombre obtenu : {nxtDouble}", filePath);
                 }
             }
