@@ -51,18 +51,18 @@ Every command must start with `!profile`.
 - `resetall` : *resets all users' xp to 0 and golds to 100*
 - `delete [@user]` : *deletes a user's profile*
 - `deleteall` : *deletes all users' profiles*
-- 
+
 ### 3.4. Item
 Item based commands.
 They are all based on the current guild.
 Every command must start with `!item`.
 #### 3.4.1. User commands
-- `info [item]` : *displays the informations about the requested item if it exists*
 - `list` : *displays a list of all the items existing within the guild*
+- `info [item]` : *displays the informations about the requested item if it exists*
 - `buy [item]` : *adds the item to the user's inventory if he has enough golds*
 #### 3.4.2. Admin commands
 - `create` : *prompts a dialogue with the user to create a new item*
-- 
+
 ### 3.5. Random
 
 ## 4. Other features
