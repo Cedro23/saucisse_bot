@@ -5,7 +5,9 @@ using Saucisse_bot.Bots.Handlers.Dialogue;
 using Saucisse_bot.Bots.Handlers.Dialogue.Steps;
 using Saucisse_bot.Core.Services.Items;
 using Saucisse_bot.DAL.Models.Items;
+using System;
 using System.Threading.Tasks;
+using static Saucisse_bot.DAL.Models.Items.Item;
 
 namespace Saucisse_bot.Bots.Commands
 {
@@ -13,6 +15,14 @@ namespace Saucisse_bot.Bots.Commands
     public class ItemCommands : BaseCommandModule
     {
         private readonly IItemService _itemService;
+        //public enum ItemRarity
+        //{
+        //    Common, //Grey
+        //    Uncommon, //Green
+        //    Rare, //Blue
+        //    Epic, //Violet
+        //    Legendary //Orange
+        //}
 
         public ItemCommands(IItemService itemService)
         {
@@ -78,12 +88,12 @@ namespace Saucisse_bot.Bots.Commands
                 thumbnail.Url = item.ImageUrl;
                 embed = new DiscordEmbedBuilder()
                 {
-                    Title = item.Name,
+                    Title = $"{item.Name} [{item.Rarity}]",
                     Thumbnail = thumbnail,
-                    Color = DiscordColor.Green
+                    Color = ItemRarityToDiscordColor(item.Rarity)
                 };
                 embed.AddField("Description", item.Description);
-                embed.AddField("Price", $"{item.Price} golds");
+                embed.AddField("Price", String.Format("{0} gold{1}", item.Price, item.Price > 1 ? "s" : string.Empty));
             }
 
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
@@ -128,7 +138,8 @@ namespace Saucisse_bot.Bots.Commands
         [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
         public async Task CreateItem(CommandContext ctx)
         {
-            var itemImageUrlStep = new StringStep("Please enter the image URL for this item?", null);
+            var itemRarityStep = new IntStep("Please enter the rarity for this item [0 = common, 1 = uncommon, 2 = rare, 3 = epic, 4 = legendary]", null);
+            var itemImageUrlStep = new StringStep("Please enter the image URL for this item", itemRarityStep);
             var itemPriceStep = new IntStep("How much does the item cost?", itemImageUrlStep, 1);
             var itemDescriptionStep = new StringStep("What is the item about?", itemPriceStep);
             var itemNameStep = new StringStep("What will the item be called?", itemDescriptionStep);
@@ -140,6 +151,7 @@ namespace Saucisse_bot.Bots.Commands
             itemDescriptionStep.OnValidResult += (result) => item.Description = result;
             itemPriceStep.OnValidResult += (result) => item.Price = result;
             itemImageUrlStep.OnValidResult += (result) => item.ImageUrl = result;
+            itemRarityStep.OnValidResult += (result) => item.Rarity = (ItemRarity)Enum.ToObject(typeof(ItemRarity), result); 
 
             var inputDialogueHandler = new DialogueHandler(
                 ctx.Client,
@@ -194,5 +206,31 @@ namespace Saucisse_bot.Bots.Commands
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false); 
         }
         #endregion
+
+        private DiscordColor ItemRarityToDiscordColor(ItemRarity itemRarity)
+        {
+            DiscordColor colour = DiscordColor.None;
+            switch (itemRarity)
+            {
+                case ItemRarity.Common:
+                    colour = DiscordColor.DarkGray;
+                    break;
+                case ItemRarity.Uncommon:
+                    colour = DiscordColor.SapGreen;
+                    break;
+                case ItemRarity.Rare:
+                    colour = DiscordColor.CornflowerBlue;
+                    break;
+                case ItemRarity.Epic:
+                    colour = DiscordColor.Violet;
+                    break;
+                case ItemRarity.Legendary:
+                    colour = DiscordColor.Orange;
+                    break;
+                default:
+                    break;
+            }
+            return colour;
+        }
     }
 }

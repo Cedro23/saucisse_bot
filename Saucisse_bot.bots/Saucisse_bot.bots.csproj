@@ -4,17 +4,22 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Saucisse_bot.Bots</RootNamespace>
+    <ApplicationIcon>saucisse_bot.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\Debug\net5.0\**" />
     <Compile Remove="bin\Debug\netcoreapp3.1\**" />
+    <Content Remove="bin\Debug\net5.0\**" />
     <Content Remove="bin\Debug\netcoreapp3.1\**" />
+    <EmbeddedResource Remove="bin\Debug\net5.0\**" />
     <EmbeddedResource Remove="bin\Debug\netcoreapp3.1\**" />
+    <None Remove="bin\Debug\net5.0\**" />
     <None Remove="bin\Debug\netcoreapp3.1\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="bin\Debug\net5.0\config.json" />
+    <Content Include="saucisse_bot.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="bin\Debug\" />
     <Folder Include="Sources\Images\" />
   </ItemGroup>
 
