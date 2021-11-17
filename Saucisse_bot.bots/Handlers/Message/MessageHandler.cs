@@ -40,7 +40,7 @@ namespace Saucisse_bot.Bots.Handlers.Message
         {
             if (message.EndsWith("quoi", StringComparison.OrdinalIgnoreCase) || _rgQuoi.IsMatch(message.ToLower()))
                 await SendAnswerMsg(channel, "feur").ConfigureAwait(false);
-            if (message.EndsWith("qui") || _rgQui.IsMatch(message.ToLower()))
+            if (message.EndsWith("qui", StringComparison.OrdinalIgnoreCase) || _rgQui.IsMatch(message.ToLower()))
                 await SendAnswerMsg(channel, "kette").ConfigureAwait(false);
             if (message.Equals("marco", StringComparison.OrdinalIgnoreCase))
                 await SendAnswerMsg(channel, "Polo").ConfigureAwait(false);
@@ -70,6 +70,13 @@ namespace Saucisse_bot.Bots.Handlers.Message
             await channel.SendMessageAsync(answer).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Sends a file as an answer
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="content"></param>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         private async Task SendFile(DiscordChannel channel, string content, string filePath)
         {
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))

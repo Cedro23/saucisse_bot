@@ -19,6 +19,7 @@ namespace Saucisse_bot.Core.Services.Items
     public interface IItemService
     {
         Task CreateNewItemAsync(Item item);
+        Task<bool> DeleteItemAsync(Item item);
         Task<Item> GetItemByNameAsync(ulong guildId, string itemName);
         Task<List<Item>> GetItemList(ulong guildId);
         Task<ResultItem> PurchaseItemAsync(ulong discordId, ulong guildId, string itemName);
@@ -42,6 +43,23 @@ namespace Saucisse_bot.Core.Services.Items
             context.Add(item);
 
             await context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        public async Task<bool> DeleteItemAsync(Item item)
+        {
+            using var context = new RPGContext(_options);
+
+            try
+            {
+                context.Remove(item);
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public async Task<Item> GetItemByNameAsync(ulong guildId, string itemName)

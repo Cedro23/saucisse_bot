@@ -19,85 +19,7 @@ namespace Saucisse_bot.Bots.Commands
             _itemService = itemService;
         }
 
-        [Command("create")]
-        [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
-        public async Task CreateItem(CommandContext ctx)
-        {
-            var itemPriceStep = new IntStep("How much does the item cost?", null, 1);
-            var itemDescriptionStep = new StringStep("What is the item about?", itemPriceStep);
-            var itemNameStep = new StringStep("What will the item be called?", itemDescriptionStep);
-
-            var item = new Item();
-            item.GuildId = ctx.Guild.Id;
-            
-            itemNameStep.OnValidResult += (result) => item.Name = result;
-            itemDescriptionStep.OnValidResult += (result) => item.Description = result;
-            itemPriceStep.OnValidResult += (result) => item.Price = result;
-
-            var inputDialogueHandler = new DialogueHandler(
-                ctx.Client,
-                ctx.Channel,
-                ctx.User,
-                itemNameStep
-            );
-
-            bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
-
-            if (!succeeded) { return; }
-
-            await _itemService.CreateNewItemAsync(item).ConfigureAwait(false);
-
-            await ctx.Channel.SendMessageAsync($"Item {item.Name} succesfully created with Id: {item.Id}").ConfigureAwait(false);
-        }
-
-        [Command("info")]
-        [Description("Return the informations of an item")]
-        public async Task ItemInfo(CommandContext ctx)
-        {
-            var itemNameStep = new StringStep("What item are you looking for?", null);
-            
-            var itemName = string.Empty;
-
-            itemNameStep.OnValidResult += (result) => itemName = result;
-
-            var inputDialogueHandler = new DialogueHandler(
-                ctx.Client,
-                ctx.Channel,
-                ctx.User,
-                itemNameStep
-                );
-
-            bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
-
-            if (!succeeded) { return; }
-
-            var item = await _itemService.GetItemByNameAsync(ctx.Guild.Id, itemName).ConfigureAwait(false);
-            var embed = new DiscordEmbedBuilder();
-
-            if (item == null)
-            {
-                embed = new DiscordEmbedBuilder()
-                {
-                    Title = "404 NOT FOUND",
-                    Color = DiscordColor.Red
-                };
-                embed.AddField(itemName, "This item could not be found... Are you sure it's the correct name ?");
-
-            }
-            else
-            {
-                embed = new DiscordEmbedBuilder()
-                {
-                    Title = item.Name,
-                    Color = DiscordColor.Green
-                };
-                embed.AddField("Description", item.Description);
-                embed.AddField("Price", $"{item.Price} golds");
-            }
-
-            await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
-        }
-
+        #region User commands
         [Command("list")]
         [Description("Returns the list of existing items for the current guild")]
         public async Task ItemList(CommandContext ctx)
@@ -126,6 +48,42 @@ namespace Saucisse_bot.Bots.Commands
                     Description = "There currently are no items on this guild",
                     Color = DiscordColor.Red
                 };
+            }
+
+            await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
+        }
+
+        [Command("info")]
+        [Description("Return the informations of an item")]
+        public async Task ItemInfo(CommandContext ctx, params string[] itemNameSplit)
+        {
+            string itemName = string.Join(' ', itemNameSplit);
+
+            var item = await _itemService.GetItemByNameAsync(ctx.Guild.Id, itemName).ConfigureAwait(false);
+            var embed = new DiscordEmbedBuilder();
+
+            if (item == null)
+            {
+                embed = new DiscordEmbedBuilder()
+                {
+                    Title = "404 NOT FOUND",
+                    Color = DiscordColor.Red
+                };
+                embed.AddField(itemName, "This item could not be found... Are you sure it's the correct name ?");
+
+            }
+            else
+            {
+                DiscordEmbedBuilder.EmbedThumbnail thumbnail = new DiscordEmbedBuilder.EmbedThumbnail();
+                thumbnail.Url = item.ImageUrl;
+                embed = new DiscordEmbedBuilder()
+                {
+                    Title = item.Name,
+                    Thumbnail = thumbnail,
+                    Color = DiscordColor.Green
+                };
+                embed.AddField("Description", item.Description);
+                embed.AddField("Price", $"{item.Price} golds");
             }
 
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
@@ -161,7 +119,80 @@ namespace Saucisse_bot.Bots.Commands
             }
 
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
+        } 
+        #endregion
 
+        #region Admin commands
+        [Command("create")]
+        [Hidden]
+        [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
+        public async Task CreateItem(CommandContext ctx)
+        {
+            var itemImageUrlStep = new StringStep("Please enter the image URL for this item?", null);
+            var itemPriceStep = new IntStep("How much does the item cost?", itemImageUrlStep, 1);
+            var itemDescriptionStep = new StringStep("What is the item about?", itemPriceStep);
+            var itemNameStep = new StringStep("What will the item be called?", itemDescriptionStep);
+
+            var item = new Item();
+            item.GuildId = ctx.Guild.Id;
+
+            itemNameStep.OnValidResult += (result) => item.Name = result;
+            itemDescriptionStep.OnValidResult += (result) => item.Description = result;
+            itemPriceStep.OnValidResult += (result) => item.Price = result;
+            itemImageUrlStep.OnValidResult += (result) => item.ImageUrl = result;
+
+            var inputDialogueHandler = new DialogueHandler(
+                ctx.Client,
+                ctx.Channel,
+                ctx.User,
+                itemNameStep
+            );
+
+            bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
+
+            if (!succeeded) { return; }
+
+            await _itemService.CreateNewItemAsync(item).ConfigureAwait(false);
+
+            await ctx.Channel.SendMessageAsync($"Item {item.Name} succesfully created with Id: {item.Id}").ConfigureAwait(false);
         }
+
+        [Command("delete")]
+        [Hidden]
+        [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
+        public async Task DeleteItem(CommandContext ctx, params string[] itemNameSplit)
+        {
+            bool isOk = false;
+            string itemName = string.Join(' ', itemNameSplit);
+            var item = await _itemService.GetItemByNameAsync(ctx.Guild.Id, itemName).ConfigureAwait(false);
+            var embed = new DiscordEmbedBuilder();
+
+            if (item != null)
+            {
+                isOk = await _itemService.DeleteItemAsync(item).ConfigureAwait(false);
+            }
+
+            if (isOk)
+            {
+                embed = new DiscordEmbedBuilder()
+                {
+                    Title = "Succes!",
+                    Description = "The item was correctly deleted.",
+                    Color = DiscordColor.Green
+                };
+            }
+            else
+            {
+                embed = new DiscordEmbedBuilder()
+                {
+                    Title = "Failure!",
+                    Description = "Failed to delete the item. Maybe it doesn't exist.",
+                    Color = DiscordColor.Red
+                };
+            }
+
+            await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false); 
+        }
+        #endregion
     }
 }
