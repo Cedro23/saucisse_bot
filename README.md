@@ -28,7 +28,7 @@ dotnet-ef database update -p ../Saucisse_bot.DAL.Migrations/Saucisse_bot.DAL.Mig
 ```
 
 ## 2. Building the solution
-To build the solution simply double click the "build.bat" script.
+To build the solution simply publish the Saucisse_bot.bots project.
 
 ## 3. Commands
 Here's a listing of all the existing commands.
