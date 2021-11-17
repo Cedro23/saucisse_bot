@@ -31,12 +31,13 @@ dotnet-ef database update -p ../Saucisse_bot.DAL.Migrations/Saucisse_bot.DAL.Mig
 To build the solution simply double click the "build.bat" script.
 
 ## 3. Commands
+Here's a listing of all the existing commands.
 ### 3.1. Database
 
 ### 3.2. Debug
 
 ### 3.3. Profile
-Here's a listing of all the commands based on users' profiles.
+Profile based commands.
 They are all based on the current guild.
 #### 3.3.1. User commands
 - `create` : *create a profile for the user using the command*
@@ -49,7 +50,13 @@ They are all based on the current guild.
 - `resetall` : *resets all users' xp to 0 and golds to 100*
 - `delete [@user]` : *deletes a user's profile*
 - `deleteall` : *deletes all users' profiles*
-### 3.4. Random
+### 3.4. Item
+Item based commands.
+They are all based on the current guild.
+### 3.4.1. User commands
+### 3.4.2. Admin commands
+
+### 3.5. Random
 
 ## 4. Other features
 ### 4.1. Message handler
