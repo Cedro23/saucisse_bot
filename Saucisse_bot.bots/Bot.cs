@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Saucisse_bot.Bots.Commands;
 using Saucisse_bot.Bots.Handlers.Message;
 using Saucisse_bot.Bots.JsonParsers;
+using Saucisse_bot.Core.Services.Profiles;
 using System;
 using System.IO;
 using System.Text;
@@ -26,7 +27,7 @@ namespace Saucisse_bot.Bots
        
         public Bot(IServiceProvider services)
         {
-            _messageHandler = new MessageHandler();
+            _messageHandler = new MessageHandler((IExperienceService)services.GetService(typeof(IExperienceService)), (IGoldService)services.GetService(typeof(IGoldService)));
             var json = string.Empty;
 
             #region config.json
@@ -118,7 +119,7 @@ namespace Saucisse_bot.Bots
         {
             if (!e.Author.IsBot && e.Message.Content.Substring(0, 1) != _configJson.Prefix)
             {
-                await _messageHandler.HandleMessage(e.Message.Content, e.Channel, e.Author.Id).ConfigureAwait(false);
+                await _messageHandler.HandleMessage(e.Guild, e.Channel, e.Author.Id, e.Message.Content).ConfigureAwait(false);
             }
         }
     }

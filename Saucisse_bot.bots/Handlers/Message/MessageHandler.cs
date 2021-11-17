@@ -1,6 +1,8 @@
 ﻿using DSharpPlus.Entities;
 using Newtonsoft.Json;
+using Saucisse_bot.Bots.Handlers.Experience;
 using Saucisse_bot.Bots.JsonParsers;
+using Saucisse_bot.Core.Services.Profiles;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,13 +20,19 @@ namespace Saucisse_bot.Bots.Handlers.Message
         private const string PATTERN_QUOI = @"quoi *[\?][?,;. !/()'xDmdr]*";
         private const string PATTERN_QUI = @"qui *[\?][?,;. !/()'xDmdr]*";
 
+        private ExperienceHandler _expHandler;
+        private IGoldService _goldService;
+
         private UsersJson _usersJson;
         private Regex _rgQuoi;
         private Regex _rgQui;
 
         // Main constructor
-        public MessageHandler()
+        public MessageHandler(IExperienceService experienceService, IGoldService goldService)
         {
+            _expHandler = new ExperienceHandler(experienceService);
+            _goldService = goldService;
+
             var json = string.Empty;
             using (var fs = File.OpenRead("Sources/JsonDocs/users.json"))
             using (var sr = new StreamReader(fs, new UTF8Encoding(false)))
@@ -36,7 +44,7 @@ namespace Saucisse_bot.Bots.Handlers.Message
             _rgQui = new Regex(PATTERN_QUI);
         }
 
-        public async Task HandleMessage(string message, DiscordChannel channel, ulong userID)
+        public async Task HandleMessage(DiscordGuild guild, DiscordChannel channel, ulong userID, string message)
         {
             if (message.EndsWith("quoi", StringComparison.OrdinalIgnoreCase) || _rgQuoi.IsMatch(message.ToLower()))
                 await SendAnswerMsg(channel, "feur").ConfigureAwait(false);
@@ -57,6 +65,8 @@ namespace Saucisse_bot.Bots.Handlers.Message
                     await SendFile(channel, $"Nombre obtenu : {nxtDouble}", filePath);
                 }
             }
+
+            await GiveGoldAndExp(guild, channel, userID);
         }
 
         /// <summary>
@@ -86,6 +96,12 @@ namespace Saucisse_bot.Bots.Handlers.Message
                     .WithFiles(new Dictionary<string, Stream>() { { filePath, fs } })
                     .SendAsync(channel);
             }
+        }
+
+        private async Task GiveGoldAndExp(DiscordGuild guild, DiscordChannel channel, ulong memberId)
+        {
+            await _expHandler.GrantExp(guild, channel, memberId, 1, 2).ConfigureAwait(false);
+            await _goldService.GrantGolds(guild.Id, memberId, 1, 2).ConfigureAwait(false);
         }
     }
 }

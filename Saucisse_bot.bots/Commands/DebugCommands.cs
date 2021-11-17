@@ -2,10 +2,8 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
-using Saucisse_bot.Bots.Attributes;
 using Saucisse_bot.Bots.Handlers.Dialogue;
 using Saucisse_bot.Bots.Handlers.Dialogue.Steps;
-using Saucisse_bot.Bots.Handlers.ExperienceHandler;
 using Saucisse_bot.Core.Services.Profiles;
 using System;
 using System.Collections.Generic;
@@ -20,11 +18,9 @@ namespace Saucisse_bot.Bots.Commands
     /// </summary>
     public class DebugCommands : BaseCommandModule
     {
-        private ExperienceHandler _expHandler;
-
         public DebugCommands(IExperienceService experienceService)
         {
-            _expHandler = new ExperienceHandler(experienceService);  
+            
         }
 
         [Command("ping")]

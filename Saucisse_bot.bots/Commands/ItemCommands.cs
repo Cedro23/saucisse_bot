@@ -15,14 +15,6 @@ namespace Saucisse_bot.Bots.Commands
     public class ItemCommands : BaseCommandModule
     {
         private readonly IItemService _itemService;
-        //public enum ItemRarity
-        //{
-        //    Common, //Grey
-        //    Uncommon, //Green
-        //    Rare, //Blue
-        //    Epic, //Violet
-        //    Legendary //Orange
-        //}
 
         public ItemCommands(IItemService itemService)
         {

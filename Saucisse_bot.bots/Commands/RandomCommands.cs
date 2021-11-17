@@ -1,7 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Newtonsoft.Json;
-using Saucisse_bot.Bots.Handlers.ExperienceHandler;
+using Saucisse_bot.Bots.Handlers.Experience;
 using Saucisse_bot.Bots.JsonParsers;
 using Saucisse_bot.Core.Services.Profiles;
 using System;
@@ -17,8 +17,9 @@ namespace Saucisse_bot.Bots.Commands
     {
         private UsersJson _usersJson;
         private ExperienceHandler _expHandler;
+        private IGoldService _goldService;
 
-        public RandomCommands(IExperienceService experienceService)
+        public RandomCommands(IExperienceService experienceService, IGoldService goldService)
         {
             var json = string.Empty;
             using (var fs = File.OpenRead("Sources/JsonDocs/users.json"))
@@ -28,6 +29,7 @@ namespace Saucisse_bot.Bots.Commands
             _usersJson = JsonConvert.DeserializeObject<UsersJson>(json);
 
             _expHandler = new ExperienceHandler(experienceService);
+            _goldService = goldService;
         }
 
         [Command("poticha")]
@@ -41,8 +43,9 @@ namespace Saucisse_bot.Bots.Commands
 
             string name = namesList[rnd.Next(0, namesList.Count - 1)];
 
-            await _expHandler.GrantExp(ctx, 100, 200);
-            await ctx.Channel.SendMessageAsync($"Le nom du potichat aujourd'hui est : {name}");
+            await _expHandler.GrantExp(ctx.Guild, ctx.Channel, ctx.Member.Id, 100, 200).ConfigureAwait(false);
+            await _goldService.GrantGolds(ctx.Guild.Id, ctx.Member.Id, 25, 50).ConfigureAwait(false);
+            await ctx.Channel.SendMessageAsync($"Le nom du potichat aujourd'hui est : {name}").ConfigureAwait(false);
         }
 
         [Command("pau")]
@@ -58,7 +61,7 @@ namespace Saucisse_bot.Bots.Commands
 
             try
             {
-                var uPau = await ctx.Guild.GetMemberAsync(_usersJson.Pau);
+                var uPau = await ctx.Guild.GetMemberAsync(_usersJson.Pau).ConfigureAwait(false);
                 if (uPau != null)
                 {
                     await uPau.ModifyAsync(x =>
@@ -72,8 +75,9 @@ namespace Saucisse_bot.Bots.Commands
                 Console.WriteLine(e.Message);
             }
 
-            await _expHandler.GrantExp(ctx, 100, 200);
-            await ctx.Channel.SendMessageAsync($"Pau, ton nouveau nom est : {name}");            
+            await _expHandler.GrantExp(ctx.Guild, ctx.Channel, ctx.Member.Id, 100, 200).ConfigureAwait(false);
+            await _goldService.GrantGolds(ctx.Guild.Id, ctx.Member.Id, 25, 50).ConfigureAwait(false);
+            await ctx.Channel.SendMessageAsync($"Pau, ton nouveau nom est : {name}").ConfigureAwait(false);            
         }
     }
 }

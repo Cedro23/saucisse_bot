@@ -22,6 +22,7 @@ namespace Saucisse_bot.Core.Services.Profiles
         Task<Result> DeleteProfileAsync(ulong guildId, ulong memberId);
         Task<Result> DeleteAllProfilesAsync(ulong guildId);
         Task<Result> AddGoldsAsync(ulong guildId, ulong memberId, int amount);
+        //Task<Result> RemoveGoldsAsync(ulong guildId, ulong memberId, int amount);
         Task<List<Profile>> GetProfileListAsync(ulong guildId);
     }
 

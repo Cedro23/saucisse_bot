@@ -8,7 +8,7 @@ namespace Saucisse_bot.Core.Services.Profiles
 {
     public interface IExperienceService
     {
-        Task<GrantXpViewModel> GrantXpAsync(ulong memberId, ulong guildId, int xpAmount);
+        Task<GrantXpViewModel> GrantXpAsync(ulong guildId, ulong memberId, int xpAmount);
     }
 
     public class ExperienceService : IExperienceService
@@ -22,7 +22,7 @@ namespace Saucisse_bot.Core.Services.Profiles
             _profileService = profileService;
         }
 
-        public async Task<GrantXpViewModel> GrantXpAsync(ulong memberId, ulong guildId, int xpAmount)
+        public async Task<GrantXpViewModel> GrantXpAsync(ulong guildId, ulong memberId, int xpAmount)
         {
             using var context = new RPGContext(_options);
 

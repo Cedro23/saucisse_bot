@@ -25,6 +25,7 @@ namespace Saucisse_bot.Bots
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IExperienceService, ExperienceService>();
             services.AddScoped<IDatabaseService, DatabaseService>();
+            services.AddScoped<IGoldService, GoldService>();
 
             var serviceProvider = services.BuildServiceProvider();
 
