@@ -7,9 +7,9 @@ namespace Saucisse_bot.DAL.Models.Items
     {
         public int ProfileId { get; set; }
         [ForeignKey("ProfileId")]
-        public Profile Profile { get; set; }
         public int ItemId { get; set; }
         [ForeignKey("ItemId")]
         public Item Item { get; set; }
+        public int Quantity { get; set; }
     }
 }

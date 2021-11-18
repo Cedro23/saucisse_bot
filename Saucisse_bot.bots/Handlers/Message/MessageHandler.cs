@@ -58,21 +58,22 @@ namespace Saucisse_bot.Bots.Handlers.Message
                 await SendAnswerMsg(channel, "Polo").ConfigureAwait(false);
             if (message.EndsWith("tg", StringComparison.OrdinalIgnoreCase))
                 await SendAnswerMsg(channel, "v c:").ConfigureAwait(false);
-            if (message.Contains("quand même", StringComparison.OrdinalIgnoreCase))
+            if (message.Contains("comme même", StringComparison.OrdinalIgnoreCase))
             {
-                filePath = Path.Combine(Directory.GetCurrentDirectory(), "Sources\\Images\\kan_meme.jpg");
+                filePath = Path.Combine(Directory.GetCurrentDirectory(), "Sources\\Images\\kan_meme.png");
                 await SendFile(channel, "", filePath);
             }
 
-            if (userID == _usersJson.Roro)
-            {
-                nxtDouble = rnd.NextDouble();
-                if (nxtDouble <= 0.05f)
-                {
-                    filePath = Path.Combine(Directory.GetCurrentDirectory(), "Sources\\Images\\oeuf.png");
-                    await SendFile(channel, $"Nombre obtenu : {nxtDouble}", filePath);
-                }
-            }
+            //Sends "Oeuf"
+            //if (userID == _usersJson.Roro)
+            //{
+            //    nxtDouble = rnd.NextDouble();
+            //    if (nxtDouble <= 0.05f)
+            //    {
+            //        filePath = Path.Combine(Directory.GetCurrentDirectory(), "Sources\\Images\\oeuf.png");
+            //        await SendFile(channel, $"Nombre obtenu : {nxtDouble}", filePath);
+            //    }
+            //}
 
             await GiveGoldAndExp(guild, channel, userID);
         }

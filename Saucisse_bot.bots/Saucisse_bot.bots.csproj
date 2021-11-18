@@ -54,7 +54,7 @@
     <None Update="Sources\Dictionnaries\PauList.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Sources\Images\kan_meme.jpg">
+    <None Update="Sources\Images\kan_meme.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Sources\Images\oeuf.png">

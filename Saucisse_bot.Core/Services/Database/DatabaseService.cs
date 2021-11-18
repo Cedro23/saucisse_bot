@@ -57,6 +57,11 @@ namespace Saucisse_bot.Core.Services.Database
                             context.ProfileItems.Remove(entry);
                         await context.SaveChangesAsync().ConfigureAwait(false);
                         break;
+                    case "ProfileItems":
+                        foreach (var entry in context.ProfileItems)
+                            context.ProfileItems.Remove(entry);
+                        await context.SaveChangesAsync().ConfigureAwait(false);
+                        break;
                     case "Profiles":
                         break;
                     default:

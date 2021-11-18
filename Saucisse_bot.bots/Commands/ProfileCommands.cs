@@ -65,7 +65,6 @@ namespace Saucisse_bot.Bots.Commands
 
         #region Show profile
         [Command("show")]
-        [Cooldown(1, 30, CooldownBucketType.User)]
         [Description("Returns the server based profile of the user who used the command")]
         public async Task Profile(CommandContext ctx)
         {
@@ -73,7 +72,6 @@ namespace Saucisse_bot.Bots.Commands
         }
 
         [Command("show")]
-        [Cooldown(1, 30, CooldownBucketType.User)]
         [Description("Returns the server based profile of the mentionned user")]
         public async Task Profile(CommandContext ctx, DiscordMember member)
         {
@@ -101,9 +99,15 @@ namespace Saucisse_bot.Bots.Commands
                 profileEmbed.AddField("Level", profile.Level.ToString());
                 profileEmbed.AddField("Xp", profile.Xp.ToString());
                 profileEmbed.AddField("Gold", profile.Gold.ToString());
-                if (profile.Items.Count > 0)
+
+                int nbItemsInInventory = profile.Inventory.Sum(x => x.Quantity);
+                if (nbItemsInInventory > 0)
                 {
-                    profileEmbed.AddField("Items", string.Join(", ", profile.Items.Select(x => x.Item.Name)));
+                    profileEmbed.AddField("Inventory", string.Format("You currently have {0} item{1} in your inventory. \r\n To see the detail use \"!inventory show\"", nbItemsInInventory, nbItemsInInventory > 1 ? "s" : ""));
+                }
+                else
+                {
+                    profileEmbed.AddField("Inventory", "Your inventory is empty");
                 }
             }
             else
@@ -121,7 +125,6 @@ namespace Saucisse_bot.Bots.Commands
         #endregion
 
         [Command("list")]
-        [Cooldown(1, 30, CooldownBucketType.User)]
         [Description("Returns a list of all profiles existing on this server")]
         public async Task ProfileList(CommandContext ctx)
         {
@@ -132,10 +135,11 @@ namespace Saucisse_bot.Bots.Commands
                 Color = DiscordColor.Orange
             };
 
+            profiles = profiles.OrderByDescending(x => x.Gold).ToList();
             foreach (var profile in profiles)
             {
                 var member = await ctx.Guild.GetMemberAsync(profile.DiscordId).ConfigureAwait(false);
-                embed.AddField($"{member.DisplayName}", $"{profile.Gold}golds");
+                embed.AddField($"{member.DisplayName}", $"{profile.Gold} g.");
             }
 
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
@@ -144,7 +148,6 @@ namespace Saucisse_bot.Bots.Commands
 
         #region Admin commands
         [Command("create")]
-        [Hidden]
         [Description("Creates a profile for the specified user")]
         [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
         public async Task CreateProfile(CommandContext ctx, DiscordMember member)
@@ -187,7 +190,6 @@ namespace Saucisse_bot.Bots.Commands
         }
 
         [Command("reset")]
-        [Hidden]
         [Description("Resets a profile to 0 XP and 100 golds")]
         [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
         public async Task ResetProfile(CommandContext ctx, DiscordMember member)
@@ -214,7 +216,6 @@ namespace Saucisse_bot.Bots.Commands
         }
 
         [Command("resetall")]
-        [Hidden]
         [Description("Resets a profile to 0 XP and 100 golds")]
         [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
         public async Task ResetAllProfiles(CommandContext ctx)
@@ -241,7 +242,6 @@ namespace Saucisse_bot.Bots.Commands
         }
 
         [Command("delete")]
-        [Hidden]
         [Description("Deletes a profile")]
         [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
         public async Task DeleteProfile(CommandContext ctx, DiscordMember member)
@@ -268,7 +268,6 @@ namespace Saucisse_bot.Bots.Commands
         }
 
         [Command("deleteall")]
-        [Hidden]
         [Description("Deletes a profile")]
         [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
         public async Task DeleteAllProfiles(CommandContext ctx)
@@ -295,7 +294,6 @@ namespace Saucisse_bot.Bots.Commands
         }
 
         [Command("avatar")]
-        [Hidden]
         [Description("Displays the avatar of the given user")]
         [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
         public async Task DisplayAvatar(CommandContext ctx, DiscordMember member)

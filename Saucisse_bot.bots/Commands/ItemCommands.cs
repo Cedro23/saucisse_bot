@@ -98,7 +98,7 @@ namespace Saucisse_bot.Bots.Commands
             string itemName = string.Join(' ', itemNameSplit);
             var embed = new DiscordEmbedBuilder();
 
-            var result = await _itemService.PurchaseItemAsync(ctx.Member.Id, ctx.Guild.Id, itemName);
+            var result = await _itemService.PurchaseItemAsync(ctx.Guild.Id, ctx.Member.Id, itemName);
 
             if (!result.IsOk)
             {
@@ -126,7 +126,6 @@ namespace Saucisse_bot.Bots.Commands
 
         #region Admin commands
         [Command("create")]
-        [Hidden]
         [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
         public async Task CreateItem(CommandContext ctx)
         {
@@ -143,7 +142,8 @@ namespace Saucisse_bot.Bots.Commands
             itemDescriptionStep.OnValidResult += (result) => item.Description = result;
             itemPriceStep.OnValidResult += (result) => item.Price = result;
             itemImageUrlStep.OnValidResult += (result) => item.ImageUrl = result;
-            itemRarityStep.OnValidResult += (result) => item.Rarity = (ItemRarity)Enum.ToObject(typeof(ItemRarity), result); 
+            itemRarityStep.OnValidResult += (result) => item.Rarity = (ItemRarity)Enum.ToObject(typeof(ItemRarity), result);
+            item.MaxBuyableQuantiy = -1;
 
             var inputDialogueHandler = new DialogueHandler(
                 ctx.Client,
@@ -162,7 +162,6 @@ namespace Saucisse_bot.Bots.Commands
         }
 
         [Command("delete")]
-        [Hidden]
         [RequireRoles(RoleCheckMode.Any, "Owner", "Admin")]
         public async Task DeleteItem(CommandContext ctx, params string[] itemNameSplit)
         {

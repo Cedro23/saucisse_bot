@@ -22,7 +22,7 @@ namespace Saucisse_bot.Core.Services.Items
         Task<bool> DeleteItemAsync(Item item);
         Task<Item> GetItemByNameAsync(ulong guildId, string itemName);
         Task<List<Item>> GetItemList(ulong guildId);
-        Task<ResultItem> PurchaseItemAsync(ulong discordId, ulong guildId, string itemName);
+        Task<ResultItem> PurchaseItemAsync(ulong guildId, ulong memberId, string itemName);
     }
 
     public class ItemService : IItemService
@@ -75,11 +75,13 @@ namespace Saucisse_bot.Core.Services.Items
             return await context.Items.Where(x => x.GuildId == guildId).ToListAsync<Item>().ConfigureAwait(false);
         }
 
-        public async Task<ResultItem> PurchaseItemAsync(ulong memeberId, ulong guildId, string itemName)
+        public async Task<ResultItem> PurchaseItemAsync(ulong guildId, ulong memberId, string itemName)
         {
             using var context = new RPGContext(_options);
             ResultItem res = new ResultItem();
             res.Item = await GetItemByNameAsync(guildId, itemName).ConfigureAwait(false);
+            Profile profile = await _profileService.GetProfileAsync(guildId, memberId).ConfigureAwait(false);
+            ProfileItem profItem = await GetProfileItemAsync(profile.Id, res.Item.Id).ConfigureAwait(false);
 
             if (res.Item == null)
             {
@@ -88,8 +90,6 @@ namespace Saucisse_bot.Core.Services.Items
                 return res;
             }
 
-            Profile profile = await _profileService.GetProfileAsync(guildId, memeberId).ConfigureAwait(false);
-
             if (profile.Gold < res.Item.Price)
             {
                 res.ErrMsg = $"Not enough golds. You need {res.Item.Price - profile.Gold} more golds.";
@@ -97,19 +97,46 @@ namespace Saucisse_bot.Core.Services.Items
                 return res;
             }
 
-            profile.Gold -= res.Item.Price;
-            profile.Items.Add(new ProfileItem
+            if (profItem == null)
             {
-                ItemId = res.Item.Id,
-                ProfileId = profile.Id
-            });
+                profile.Inventory.Add(new ProfileItem
+                {
+                    ItemId = res.Item.Id,
+                    ProfileId = profile.Id,
+                    Quantity = 1
+                });
+            }
+            else
+            {
+                bool limitReached = res.Item.MaxBuyableQuantiy == -1 ? false : (res.Item.MaxBuyableQuantiy - profItem.Quantity == 0);
+                if (!limitReached)
+                {
+                    profile.Inventory.Where(x => x.Id == profItem.Id).FirstOrDefault().Quantity += 1;
+                }
+                else
+                {
+                    res.IsOk = false;
+                    res.ErrMsg = "Max buyable quantity for this item reached";
+                    return res;
+                }
+            }
 
+            profile.Gold -= res.Item.Price;
             context.Profiles.Update(profile);
-
             await context.SaveChangesAsync().ConfigureAwait(false);
 
             res.IsOk = true;
             return res;
+        }
+
+        private async Task<ProfileItem> GetProfileItemAsync(int profileId, int itemId)
+        {
+            using var context = new RPGContext(_options);
+            ProfileItem profileItem = await context.ProfileItems.Where(x => x.ProfileId == profileId && x.ItemId == itemId).FirstOrDefaultAsync().ConfigureAwait(false);
+
+            if (profileItem == null) { return null; }
+
+            return profileItem;
         }
     }
 }

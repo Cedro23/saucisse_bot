@@ -31,14 +31,14 @@ namespace Saucisse_bot.Bots.Commands
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        [Command("purgeitems")]
-        public async Task PurgeItems(CommandContext ctx)
+        [Command("purge")]
+        public async Task PurgeItems(CommandContext ctx, string tableName)
         {
-            var result = await _databaseService.PurgeTables("Items").ConfigureAwait(false);
+            var result = await _databaseService.PurgeTables(tableName).ConfigureAwait(false);
 
-            if (!result) await ctx.Channel.SendMessageAsync("There was a problem purging tables Items and ProfileItems!").ConfigureAwait(false);
+            if (!result) await ctx.Channel.SendMessageAsync("There was a problem purging the table!").ConfigureAwait(false);
 
-            await ctx.Channel.SendMessageAsync("Tables Items and ProfileItems purged succesfully!").ConfigureAwait(false);
+            await ctx.Channel.SendMessageAsync("Table purged succesfully!").ConfigureAwait(false);
         }
 
         /// <summary>

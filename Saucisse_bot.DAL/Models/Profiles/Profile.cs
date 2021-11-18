@@ -12,6 +12,6 @@ namespace Saucisse_bot.DAL.Models.Profiles
         public int Xp { get; set; }
         public int Level => (int)Math.Sqrt(Xp/100);
 
-        public List<ProfileItem> Items { get; set; } = new List<ProfileItem>();
+        public List<ProfileItem> Inventory { get; set; } = new List<ProfileItem>();
     }
 }

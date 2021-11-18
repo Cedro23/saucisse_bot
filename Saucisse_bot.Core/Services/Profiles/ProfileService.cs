@@ -41,8 +41,8 @@ namespace Saucisse_bot.Core.Services.Profiles
 
             var profile = await context.Profiles
                 .Where(x => x.GuildId == guildId)
-                .Include(x => x.Items)
-                .Include(x => x.Items).ThenInclude(x => x.Item)
+                .Include(x => x.Inventory)
+                .Include(x => x.Inventory).ThenInclude(x => x.Item)
                 .FirstOrDefaultAsync(x => x.DiscordId == memberId).ConfigureAwait(false);
 
             return profile;
