@@ -24,18 +24,11 @@ namespace Saucisse_bot.Core.Services.Profiles
 
         public async Task GrantGolds(ulong guildId, ulong memberId, int minAmount, int maxAmount)
         {
-
             Profile profile = await _profileService.GetProfileAsync(guildId, memberId).ConfigureAwait(false);
             Random rand = new Random();
             int amount = rand.Next(minAmount, maxAmount + 1);
 
-            using var context = new RPGContext(_options);
-
-            profile.Gold += amount;
-
-            context.Profiles.Update(profile);
-
-            await context.SaveChangesAsync().ConfigureAwait(false);
+            await _profileService.ManageGoldsAsync(guildId, memberId, amount, true);
 
 #if DEBUG
             //await channel.SendMessageAsync($"You got {rndExp} points of experience").ConfigureAwait(false);

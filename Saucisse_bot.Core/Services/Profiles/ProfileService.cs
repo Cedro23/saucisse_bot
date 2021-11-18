@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Saucisse_bot.DAL;
 using Saucisse_bot.DAL.Models.Profiles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,8 +22,7 @@ namespace Saucisse_bot.Core.Services.Profiles
         Task<Result> ResetAllProfilesAsync(ulong guildId);
         Task<Result> DeleteProfileAsync(ulong guildId, ulong memberId);
         Task<Result> DeleteAllProfilesAsync(ulong guildId);
-        Task<Result> AddGoldsAsync(ulong guildId, ulong memberId, int amount);
-        //Task<Result> RemoveGoldsAsync(ulong guildId, ulong memberId, int amount);
+        Task<Result> ManageGoldsAsync(ulong guildId, ulong memberId, int amount, bool isGiving);
         Task<List<Profile>> GetProfileListAsync(ulong guildId);
     }
 
@@ -222,7 +222,7 @@ namespace Saucisse_bot.Core.Services.Profiles
         /// <param name="amount"></param>
         /// <param name="guildId"></param>
         /// <returns></returns>
-        public async Task<Result> AddGoldsAsync(ulong guildId, ulong memberId, int amount)
+        public async Task<Result> ManageGoldsAsync(ulong guildId, ulong memberId, int amount, bool isGiving)
         {
             Result response = new Result();
             response.IsOk = false;
@@ -230,12 +230,17 @@ namespace Saucisse_bot.Core.Services.Profiles
 
             using var context = new RPGContext(_options);
 
-            var profile = await context.Profiles
-                .Where(x => x.GuildId == guildId)
-                .FirstOrDefaultAsync(x => x.DiscordId == memberId).ConfigureAwait(false);
+            var profile = await GetProfileAsync(guildId, memberId).ConfigureAwait(false);
 
             if (profile != null)
-                profile.Gold += amount;
+            {
+                if (isGiving)
+                    profile.Gold += amount;
+                else
+                {
+                    profile.Gold = profile.Gold - amount < 0 ? 0 : amount;
+                }
+            }
             else
             {
                 response.ErrMsg = "Could not find the account";
