@@ -22,7 +22,6 @@ namespace Saucisse_bot.Bots.Commands
 
         #region User commands
         [Command("create")]
-        [Cooldown(1, 30, CooldownBucketType.User)]
         [Description("Creates a profile for the user who used the command")]
         public async Task CreateProfile(CommandContext ctx)
         {

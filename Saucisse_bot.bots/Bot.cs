@@ -93,6 +93,7 @@ namespace Saucisse_bot.Bots
             Commands.RegisterCommands<ItemCommands>();
             Commands.RegisterCommands<ProfileCommands>();
             Commands.RegisterCommands<DatabaseCommands>();
+            Commands.RegisterCommands<SudoCommands>();
             #endregion
 
             Client.ConnectAsync().ConfigureAwait(false);
