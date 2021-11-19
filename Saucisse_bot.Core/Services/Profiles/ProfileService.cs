@@ -14,6 +14,12 @@ namespace Saucisse_bot.Core.Services.Profiles
         public string ErrMsg;
     }
 
+    public enum ResourceType
+    {
+        Gold,
+        Exp
+    }
+
     public interface IProfileService
     {
         Task<Profile> GetProfileAsync(ulong guildId, ulong memberId);
@@ -222,7 +228,7 @@ namespace Saucisse_bot.Core.Services.Profiles
         /// <param name="amount"></param>
         /// <param name="guildId"></param>
         /// <returns></returns>
-        public async Task<Result> ManageGoldsAsync(ulong guildId, ulong memberId, int amount, bool isGiving)
+        public async Task<Result> ManageResourcesAsync(ulong guildId, ulong memberId, int amount, bool isGiving, ResourceType resType)
         {
             Result response = new Result();
             response.IsOk = false;
@@ -234,11 +240,26 @@ namespace Saucisse_bot.Core.Services.Profiles
 
             if (profile != null)
             {
-                if (isGiving)
-                    profile.Gold += amount;
-                else
+                switch (resType)
                 {
-                    profile.Gold = profile.Gold - amount < 0 ? 0 : amount;
+                    case ResourceType.Gold:
+                        if (isGiving)
+                            profile.Gold += amount;
+                        else
+                        {
+                            profile.Gold = profile.Gold - amount < 0 ? 0 : profile.Gold - amount;
+                        }
+                        break;
+                    case ResourceType.Exp:
+                        if (isGiving)
+                            profile.Xp += amount;
+                        else
+                        {
+                            profile.Xp = profile.Xp - amount < 0 ? 0 : profile.Xp - amount;
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
             else
