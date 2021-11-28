@@ -28,7 +28,7 @@ namespace Saucisse_bot.Core.Services.Profiles
             Random rand = new Random();
             int amount = rand.Next(minAmount, maxAmount + 1);
 
-            await _profileService.ManageGoldsAsync(guildId, memberId, amount, true);
+            await _profileService.ManageResourcesAsync(guildId, memberId, amount, true, ResourceType.Gold);
 
 #if DEBUG
             //await channel.SendMessageAsync($"You got {rndExp} points of experience").ConfigureAwait(false);

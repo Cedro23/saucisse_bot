@@ -24,12 +24,12 @@ namespace Saucisse_bot.Core.Services.Profiles
     {
         Task<Profile> GetProfileAsync(ulong guildId, ulong memberId);
         Task<bool> CreateProfileAsync(ulong guildId, ulong memberId);
+        Task<List<Profile>> GetProfileListAsync(ulong guildId);
         Task<Result> ResetProfileAsync(ulong guildId, ulong memberId);
         Task<Result> ResetAllProfilesAsync(ulong guildId);
         Task<Result> DeleteProfileAsync(ulong guildId, ulong memberId);
         Task<Result> DeleteAllProfilesAsync(ulong guildId);
-        Task<Result> ManageGoldsAsync(ulong guildId, ulong memberId, int amount, bool isGiving);
-        Task<List<Profile>> GetProfileListAsync(ulong guildId);
+        Task<Result> ManageResourcesAsync(ulong guildId, ulong memberId, int amount, bool isGiving, ResourceType resType);
     }
 
     public class ProfileService : IProfileService
@@ -131,14 +131,14 @@ namespace Saucisse_bot.Core.Services.Profiles
                 {
                     profiles[i].Gold = 100;
                     profiles[i].Xp = 0;
-                } 
+                }
             }
             else
             {
                 response.ErrMsg = "There are no users on this server";
                 return response;
             }
-            
+
             try
             {
                 context.UpdateRange(profiles);
@@ -215,7 +215,7 @@ namespace Saucisse_bot.Core.Services.Profiles
                 response.ErrMsg = "There are no users on this server";
                 return response;
             }
-            
+
             response.IsOk = true;
             return response;
         }

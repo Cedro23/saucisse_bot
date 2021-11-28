@@ -23,7 +23,7 @@ namespace Saucisse_bot.Bots.Commands
         [Command("givegolds")]
         public async Task GiveGolds(CommandContext ctx, DiscordMember member, int amount)
         {
-            Result res = await _profileService.ManageGoldsAsync(ctx.Guild.Id, member.Id, amount, true);
+            Result res = await _profileService.ManageResourcesAsync(ctx.Guild.Id, member.Id, amount, true, ResourceType.Gold);
             DiscordEmbedBuilder profileEmbed;
 
             if (!res.IsOk)
@@ -51,7 +51,7 @@ namespace Saucisse_bot.Bots.Commands
         [Command("removegolds")]
         public async Task RemoveGolds(CommandContext ctx, DiscordMember member, int amount)
         {
-            Result res = await _profileService.ManageGoldsAsync(ctx.Guild.Id, member.Id, amount, false);
+            Result res = await _profileService.ManageResourcesAsync(ctx.Guild.Id, member.Id, amount, false, ResourceType.Gold);
             DiscordEmbedBuilder profileEmbed;
 
             if (!res.IsOk)
@@ -79,7 +79,7 @@ namespace Saucisse_bot.Bots.Commands
         [Command("giveexp")]
         public async Task GiveExp(CommandContext ctx, DiscordMember member, int amount)
         {
-            Result res = await _profileService.ManageGoldsAsync(ctx.Guild.Id, member.Id, amount, true);
+            Result res = await _profileService.ManageResourcesAsync(ctx.Guild.Id, member.Id, amount, true, ResourceType.Exp);
             DiscordEmbedBuilder profileEmbed;
 
             if (!res.IsOk)
@@ -107,7 +107,7 @@ namespace Saucisse_bot.Bots.Commands
         [Command("removeexp")]
         public async Task RemoveExp(CommandContext ctx, DiscordMember member, int amount)
         {
-            Result res = await _profileService.ManageGoldsAsync(ctx.Guild.Id, member.Id, amount, false);
+            Result res = await _profileService.ManageResourcesAsync(ctx.Guild.Id, member.Id, amount, false, ResourceType.Exp);
             DiscordEmbedBuilder profileEmbed;
 
             if (!res.IsOk)
