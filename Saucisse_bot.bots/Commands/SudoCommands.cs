@@ -2,7 +2,6 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using Saucisse_bot.Core.Services.Profiles;
-using Saucisse_bot.DAL.Models.Profiles;
 using System.Threading.Tasks;
 
 namespace Saucisse_bot.Bots.Commands

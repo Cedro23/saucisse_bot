@@ -95,6 +95,7 @@ namespace Saucisse_bot.Bots
             Commands.RegisterCommands<DatabaseCommands>();
             Commands.RegisterCommands<SudoCommands>();
             Commands.RegisterCommands<JDRCommands>();
+            Commands.RegisterCommands<GambleCommands>();
             #endregion
 
             Client.ConnectAsync().ConfigureAwait(false);
