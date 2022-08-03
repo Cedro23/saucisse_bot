@@ -1,6 +1,6 @@
 # Saucisse_bot
 
-Saucisse_bot is a C# Discord bot based on the Dsharp+ library.
+Saucisse_bot is a C# Discord bot based on the Dsharp+ library. I made it going along Dapper Dino's tutorial on youtube, and added some features of my owns.
 
 It is a project I made for fun. You can copy the code as much as you want. I used it for a while in my Discord server but I found myself lacking in time to continue its development, hence the incomplete documentation (part 4 especially). 
 
